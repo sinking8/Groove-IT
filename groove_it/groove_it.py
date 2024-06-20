@@ -73,7 +73,6 @@ class Document:
             raise Exception(f"Error performing search: {e}")
             return []
             
-
     def clear_documents(self):
         try:
             self.mongo_db[self.config['db']["MONGO_DB"]][self.user_id].drop()
@@ -123,4 +122,3 @@ class User:
 # results = pre.perform_search(query)
 # for result in results:
 #     print(result)
-

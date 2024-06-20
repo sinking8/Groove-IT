@@ -1,0 +1,11 @@
+[env]
+CACHE_DIR = "./cache"
+
+[llm]
+TOGETHER_API_KEY = "#"
+
+[db]
+MONGO_URI = "#"
+REDIS_HOST = "#"
+REDIS_PORT = "#"
+REDIS_PASSWORD = "#"
