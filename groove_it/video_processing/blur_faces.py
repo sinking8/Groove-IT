@@ -14,37 +14,30 @@ class Blur_Faces:
     def __init__(self,video_path):
         self.video_path = video_path
 
+    
+    def save_images(self,frame,faces):
+        for i,face in enumerate(faces):
+            (top,right,bottom,left) = face
+            roi_color = frame[top:bottom, left:right,:]
+            cv2.imwrite(f"{self.cache_dir}/face_{i}.png", roi_color)
+
     def unique_face_check(self,frame):
         face_encodings = face_recognition.face_encodings(frame)
+        faces = face_recognition.face_locations(frame)
 
         if(self.unique_face_encodings is None):
             self.unique_face_encodings = face_encodings
+            self.save_images(frame,faces)
             return frame
         
-        for face_encoding in face_encodings:
+        for face,face_encoding in zip(face,face_encodings):
             match = face_recognition.compare_faces(self.unique_face_encodings, face_encoding)
             if not any(match):
+                self.save_images(frame,[face])
                 self.unique_face_encodings.append(face_encoding)
         
         return frame
     
-    def save_unique_faces_images(self):
-        # Boolean Dict
-        is_saved = dict(zip(range(len(self.unique_face_encodings)), [False]*len(self.unique_face_encodings)))
-        clip = VideoFileClip(self.video_path)
-
-        for i, frame in enumerate(clip.iter_frames()):
-            face_encodings = face_recognition.face_encodings(frame)
-            faces = face_recognition.face_locations(frame)
-            for face,face_encoding in zip(faces,face_encodings):
-                match = face_recognition.compare_faces(self.unique_face_encodings, face_encoding)
-                if any(match) and not is_saved[match.index(True)]:
-                    # Crop the face and save
-                    (top,right,bottom,left) = face
-                    roi_color = frame[top:bottom, left:right,:]
-                    cv2.imwrite(f"{self.cache_dir}/face_{match.index(True)}.png", roi_color)
-                    is_saved[match.index(True)] = True
-
     def detect_unique_faces(self):
         try:
             clip = VideoFileClip(self.video_path)
@@ -54,9 +47,6 @@ class Blur_Faces:
 
             # Save Unique Face Dict
             self.unique_faces = dict(zip(range(len(self.unique_face_encodings)), self.unique_face_encodings))
-
-            # Save Unique Faces Reference Images
-            self.save_unique_faces_images()
 
             return {"status": True, "unique_faces": self.unique_faces,"faces_dirs": f"{self.cache_dir}"}
         
@@ -95,8 +85,8 @@ class Blur_Faces:
         modifiedClip = clip.fl_image(lambda x: self.blur_face(x,faces=faces))
         modifiedClip.write_videofile(f"{self.cache_dir}/blurred.mp4")
         return f"{self.cache_dir}/blurred.mp4"
-   
-    
+
+
 # Test    
 # Fetch Frames
 blur_face_inst =   Blur_Faces("./test_videos/test2.mp4")
