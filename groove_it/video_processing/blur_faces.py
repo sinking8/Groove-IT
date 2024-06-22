@@ -63,7 +63,7 @@ class Blur_Faces:
             # Save Unique Face Dict
             self.unique_faces = dict(zip(range(len(self.unique_face_encodings)), self.unique_face_encodings))
 
-            return {"status": True, "unique_faces": self.unique_faces,"faces_dirs": f"{self.cache_dir}"}
+            return {"status": True, "unique_faces": list(self.unique_faces.keys()),"faces_dirs": f"{self.cache_dir}"}
         
         except Exception as e:
             print(e)
@@ -110,8 +110,8 @@ class Blur_Faces:
 
 # Test    
 # Fetch Frames
-blur_face_inst =   Blur_Faces("./test_videos/test2.mp4")
-# frames = blur_face_inst.blur_faces(faces='all')
-print(blur_face_inst.detect_unique_faces())
-#blur_face_inst.clear_cache()
-# blur_face_inst.blur_faces(faces=[0,1])
+# blur_face_inst =   Blur_Faces("./test_videos/test2.mp4")
+# # frames = blur_face_inst.blur_faces(faces='all')
+# print(blur_face_inst.detect_unique_faces())
+# #blur_face_inst.clear_cache()
+# # blur_face_inst.blur_faces(faces=[0,1])

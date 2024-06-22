@@ -9,7 +9,7 @@ from langchain_together.embeddings import TogetherEmbeddings
 from langchain_community.vectorstores import MongoDBAtlasVectorSearch
 
 # from teach_it.utils import load_config
-from utils import load_config
+from groove_it.utils import load_config
 
 class Document:
     def __init__(self, config,user_id):

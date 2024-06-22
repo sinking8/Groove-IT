@@ -8,10 +8,9 @@ def load_config():
     try:
         with open(config_path, "r") as f:
             config = toml.load(f)
-
         # Setting up the environment variables
         for key, value in config.items():
-            os.environ[key] = value
+            os.environ[key] = str(value)
 
         return config
     
