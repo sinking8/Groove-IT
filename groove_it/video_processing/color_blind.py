@@ -3,7 +3,6 @@ import os
 from daltonize import daltonize
 from moviepy.editor import VideoFileClip
 
-
 # Need to set the video cache dir outside the class
 os.environ['VIDEO_CACHE']= "./video_cache"
 
