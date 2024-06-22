@@ -1,0 +1,105 @@
+import cv2
+import numpy as np
+
+from moviepy.editor import VideoFileClip
+import face_recognition
+
+class FaceDetect:
+    def __init__(self, face_cascade_path):
+        self.face_cascade = cv2.CascadeClassifier(face_cascade_path)
+        print(cv2.CascadeClassifier.empty(self.face_cascade))
+
+class Blur_Faces:
+    # Cascades Dir
+    face_cascade_path = "./cascades/haarcascade_frontalface_alt2.xml"
+    cache_dir = "./video_cache"
+
+    fps = None
+    unique_faces = {}
+    unique_face_encodings = None
+    
+    def __init__(self,video_path):
+        self.video_path = video_path
+        self.face_detect = FaceDetect(self.face_cascade_path)
+
+    def unique_face_check(self,frame):
+        face_encodings = face_recognition.face_encodings(frame)
+
+        if(self.unique_face_encodings is None):
+            self.unique_face_encodings = face_encodings
+            return frame
+        
+        for face_encoding in face_encodings:
+            match = face_recognition.compare_faces(self.unique_face_encodings, face_encoding)
+            if not any(match):
+                self.unique_face_encodings.append(face_encoding)
+        return frame
+    
+    def save_unique_faces_images(self):
+        # Boolean Dict
+        is_saved = dict(zip(range(len(self.unique_face_encodings)), [False]*len(self.unique_face_encodings)))
+        clip = VideoFileClip(self.video_path)
+
+        for i, frame in enumerate(clip.iter_frames()):
+            face_encodings = face_recognition.face_encodings(frame)
+            faces = face_recognition.face_locations(frame)
+            for face,face_encoding in zip(faces,face_encodings):
+                match = face_recognition.compare_faces(self.unique_face_encodings, face_encoding)
+                if any(match) and not is_saved[match.index(True)]:
+                    # Crop the face and save
+                    (top,right,bottom,left) = face
+                    roi_color = frame[top:bottom, left:right,:]
+                    cv2.imwrite(f"{self.cache_dir}/face_{match.index(True)}.png", roi_color)
+                    is_saved[match.index(True)] = True
+
+    def detect_unique_faces(self):
+        clip = VideoFileClip(self.video_path)
+
+        # Run the unique face check on each frame
+        clip.fl_image(lambda x: self.unique_face_check(x))
+
+        # Save Unique Face Dict
+        self.unique_faces = dict(zip(range(len(self.unique_face_encodings)), self.unique_face_encodings))
+
+        # Save Unique Faces Reference Images
+        self.save_unique_faces_images()
+
+        print(f'Number of Unique Faces: {len(self.unique_faces)}')
+        
+    def blur_face(self,frame,faces='all'):
+        detected_faces = face_recognition.face_locations(frame)
+        new_frame = np.copy(frame)
+
+        if faces == 'all':        
+            for (top,right,bottom,left) in detected_faces:     
+                roi_color = frame[top:bottom, left:right]
+                blur = cv2.GaussianBlur(roi_color, (99, 99), 30)
+                new_frame[top:bottom, left:right] = blur
+
+            return  new_frame
+        
+        else:
+            blur_faces = [self.unique_faces[face] for face in faces]
+            face_encodings = face_recognition.face_encodings(frame)
+            for face, face_encoding in zip(detected_faces,face_encodings):
+                # If there is a match blur
+                match = face_recognition.compare_faces(blur_faces, face_encoding)
+                if any(match):
+                    (top,right,bottom,left) = face
+                    roi_color = frame[top:bottom, left:right]
+                    blur = cv2.GaussianBlur(roi_color, (99, 99), 30)
+                    new_frame[top:bottom, left:right] = blur
+
+            return new_frame
+        
+    def blur_faces(self,faces='all'):
+        clip = VideoFileClip(self.video_path)
+        modifiedClip = clip.fl_image(lambda x: self.blur_face(x,faces=faces))
+        modifiedClip.write_videofile(f"{self.cache_dir}/blurred.mp4")
+        return f"{self.cache_dir}/blurred.mp4"
+    
+# Fetch Frames
+blur_face_inst =   Blur_Faces("./test_videos/test2.mp4")
+# frames = blur_face_inst.blur_faces(faces='all')
+blur_face_inst.detect_unique_faces()
+# blur_face_inst.blur_faces(faces=[0,1])
