@@ -7,11 +7,15 @@ import face_recognition
 import os
 import shutil
 
+
+# Need to set the video cache dir outside the class
+os.environ['VIDEO_CACHE']= "./video_cache"
+
 class Blur_Faces:
     # Cascades Dir
     face_cascade_path = "./cascades/haarcascade_frontalface_alt2.xml"
     faces_cache_dir = "faces"
-    cache_dir = "./video_cache"
+    cache_dir = os.environ['VIDEO_CACHE']
     unique_faces = {}
     unique_face_encodings = None
     
@@ -103,7 +107,6 @@ class Blur_Faces:
             return {"status": True, "message": "Cache Cleared"}
         except Exception as e:
             return {"status": False, "message": f"Error clearing cache: {e}"}   
-
 
 # Test    
 # Fetch Frames
