@@ -4,22 +4,33 @@ import numpy as np
 from moviepy.editor import VideoFileClip
 import face_recognition
 
+import os
+import shutil
+
 class Blur_Faces:
     # Cascades Dir
     face_cascade_path = "./cascades/haarcascade_frontalface_alt2.xml"
-    cache_dir = "./video_cache/faces"
+    faces_cache_dir = "faces"
+    cache_dir = "./video_cache"
     unique_faces = {}
     unique_face_encodings = None
     
     def __init__(self,video_path):
         self.video_path = video_path
 
-    
+        # Create Cache Dir
+        if not os.path.exists(self.cache_dir):
+            os.makedirs(self.cache_dir)
+
+        # Create Faces Cache Dir
+        if not os.path.exists(os.path.join(self.cache_dir,self.faces_cache_dir)):
+            os.makedirs(os.path.join(self.cache_dir,self.faces_cache_dir))
+
     def save_images(self,frame,faces):
         for i,face in enumerate(faces):
             (top,right,bottom,left) = face
             roi_color = frame[top:bottom, left:right,:]
-            cv2.imwrite(f"{self.cache_dir}/face_{i}.png", roi_color)
+            cv2.imwrite(f"{self.cache_dir}/{self.faces_cache_dir}/face_{i}.png", roi_color)
 
     def unique_face_check(self,frame):
         face_encodings = face_recognition.face_encodings(frame)
@@ -85,6 +96,13 @@ class Blur_Faces:
         modifiedClip = clip.fl_image(lambda x: self.blur_face(x,faces=faces))
         modifiedClip.write_videofile(f"{self.cache_dir}/blurred.mp4")
         return f"{self.cache_dir}/blurred.mp4"
+    
+    def clear_cache(self):
+        try:
+            shutil.rmtree(self.cache_dir)
+            return {"status": True, "message": "Cache Cleared"}
+        except Exception as e:
+            return {"status": False, "message": f"Error clearing cache: {e}"}   
 
 
 # Test    
@@ -92,4 +110,5 @@ class Blur_Faces:
 blur_face_inst =   Blur_Faces("./test_videos/test2.mp4")
 # frames = blur_face_inst.blur_faces(faces='all')
 print(blur_face_inst.detect_unique_faces())
+#blur_face_inst.clear_cache()
 # blur_face_inst.blur_faces(faces=[0,1])
