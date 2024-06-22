@@ -7,7 +7,6 @@ import face_recognition
 import os
 import shutil
 
-
 # Need to set the video cache dir outside the class
 os.environ['VIDEO_CACHE']= "./video_cache"
 
@@ -22,6 +21,8 @@ class Blur_Faces:
     def __init__(self,video_path):
         self.video_path = video_path
 
+        self.file_name = os.path.basename(self.video_path).split('.')[0]
+
         # Create Cache Dir
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir)
@@ -34,7 +35,7 @@ class Blur_Faces:
         for i,face in enumerate(faces):
             (top,right,bottom,left) = face
             roi_color = frame[top:bottom, left:right,:]
-            cv2.imwrite(f"{self.cache_dir}/{self.faces_cache_dir}/face_{i}.png", roi_color)
+            cv2.imwrite(f"{self.cache_dir}/{self.faces_cache_dir}/{self.file_name}_face_{i}.png", roi_color)
 
     def unique_face_check(self,frame):
         face_encodings = face_recognition.face_encodings(frame)
@@ -98,7 +99,7 @@ class Blur_Faces:
     def blur_faces(self,faces='all'):
         clip = VideoFileClip(self.video_path)
         modifiedClip = clip.fl_image(lambda x: self.blur_face(x,faces=faces))
-        modifiedClip.write_videofile(f"{self.cache_dir}/blurred.mp4")
+        modifiedClip.write_videofile(f"{self.cache_dir}/{self.file_name}_blurred.mp4")
         return f"{self.cache_dir}/blurred.mp4"
     
     def clear_cache(self):

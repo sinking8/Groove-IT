@@ -48,6 +48,25 @@ async def get_faces(file:UploadFile = File(...)):
         # Read images from cache and return
         return result
 
+@app.post("/blur_faces")
+async def blur_faces(file:UploadFile = File(...),faces:str="all"):
+    try:
+        file_path = f"{config['env']['CACHE_DIR']}/{file.filename}"
+        with open(file_path, "wb") as f:
+            f.write(file.file.read())
+    except Exception as e:
+        return{"error": f"Error saving file: {e}"}
+    else:
+        blur_faces = Blur_Faces(file_path)
+        result = blur_faces.blur_faces(faces=faces)
+        file_base_name = os.path.basename(file_path).split('.')[0]
+        return {"status":"success","blurred_video":FileResponse(result,media_type="video/mp4",filename=f"{file_base_name}_blurred.mp4")}
+    
+@app.get("/download_blur_video/{video_name}")
+async def download_blur_video(video_name:str):
+    base_name = os.pathr.basename(video_name).split('.')[0]
+    return FileResponse(f"video_cache/{base_name}_blurred.mp4",media_type="video/mp4",filename=f'video_{base_name}_blurred.mp4')
+
 @app.get("/download_face/{face_id}")
 async def download_face(face_id:int):
     return FileResponse(f"video_cache/faces/face_{face_id}.png",media_type="image/png",filename=f'face_{face_id}.png')
