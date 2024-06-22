@@ -5,7 +5,6 @@ from moviepy.editor import VideoFileClip
 import face_recognition
 
 import os
-import shutil
 
 class Blur_Faces:
     # Cascades Dir
