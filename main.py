@@ -41,7 +41,7 @@ async def get_faces(file:UploadFile = File(...)):
     except Exception as e:
         return{"error": f"Error saving file: {e}"}
     else:
-        blur_faces = Blur_Faces(file_path)
+        blur_faces = Blur_Faces(file_path,config=config)
         result = blur_faces.detect_unique_faces()
         result["faces"] = [FileResponse(f"{result['faces_dirs']}/face_{i}.png",media_type="image/png",filename=f'face_{i}.png') for i in result['unique_faces']]
 
@@ -57,7 +57,7 @@ async def blur_faces(file:UploadFile = File(...),faces:str="all"):
     except Exception as e:
         return{"error": f"Error saving file: {e}"}
     else:
-        blur_faces = Blur_Faces(file_path)
+        blur_faces = Blur_Faces(file_path,config=config)
         result = blur_faces.blur_faces(faces=faces)
         file_base_name = os.path.basename(file_path).split('.')[0]
         return {"status":"success","blurred_video":FileResponse(result,media_type="video/mp4",filename=f"{file_base_name}_blurred.mp4")}
@@ -66,6 +66,16 @@ async def blur_faces(file:UploadFile = File(...),faces:str="all"):
 async def download_blur_video(video_name:str):
     base_name = os.pathr.basename(video_name).split('.')[0]
     return FileResponse(f"video_cache/{base_name}_blurred.mp4",media_type="video/mp4",filename=f'video_{base_name}_blurred.mp4')
+
+@app.post("/clear_cache")
+async def clear_cache():
+    try:
+        os.system(f"rm -r {config['env']['CACHE_DIR']}/*")
+        os.system(f"rm -r {config['env']['CACHE_DIR']}/*")
+    except Exception as e:
+        return{"error": f"Error clearing cache: {e}"}
+    else:
+        return {"status": "success"}
 
 @app.get("/download_face/{face_id}")
 async def download_face(face_id:int):

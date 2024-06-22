@@ -7,20 +7,19 @@ import face_recognition
 import os
 import shutil
 
-# Need to set the video cache dir outside the class
-os.environ['VIDEO_CACHE']= "./video_cache"
-
 class Blur_Faces:
     # Cascades Dir
     face_cascade_path = "./cascades/haarcascade_frontalface_alt2.xml"
     faces_cache_dir = "faces"
-    cache_dir = os.environ['VIDEO_CACHE']
+    cache_dir = None
     unique_faces = {}
     unique_face_encodings = None
     
-    def __init__(self,video_path):
+    def __init__(self,video_path,config):
         self.video_path = video_path
+        self.config = config
 
+        self.cache_dir = self.config['env']['CACHE_DIR']+"/video_cache"
         self.file_name = os.path.basename(self.video_path).split('.')[0]
 
         # Create Cache Dir
