@@ -9,3 +9,8 @@
 __pycache__
 /cache
 /config.toml
+
+# Video Cache Files
+/groove_it/video_processing/test_videos/*
+/groove_it/video_processing/video_cache/*
+/groove_it/video_processing/cascades/*
