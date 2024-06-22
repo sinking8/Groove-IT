@@ -100,13 +100,6 @@ class Blur_Faces:
         modifiedClip = clip.fl_image(lambda x: self.blur_face(x,faces=faces))
         modifiedClip.write_videofile(f"{self.cache_dir}/{self.file_name}_blurred.mp4")
         return f"{self.cache_dir}/blurred.mp4"
-    
-    def clear_cache(self):
-        try:
-            shutil.rmtree(self.cache_dir)
-            return {"status": True, "message": "Cache Cleared"}
-        except Exception as e:
-            return {"status": False, "message": f"Error clearing cache: {e}"}   
 
 # Test    
 # Fetch Frames
