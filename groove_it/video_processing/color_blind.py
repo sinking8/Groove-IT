@@ -8,8 +8,9 @@ os.environ['VIDEO_CACHE']= "./video_cache"
 
 class ColorBlind:
     cache_dir = os.environ['VIDEO_CACHE']
-    def __init__(self,video_path):
+    def __init__(self,video_path,config=None):
         self.video_path = video_path
+        self.cache_dir = f'{config['env']['CACHE_DIR']}/video_cache'
 
     def daltonize_video(self,daltonize_type='d'):
         # Daltonize Types

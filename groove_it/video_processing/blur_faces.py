@@ -14,7 +14,7 @@ class Blur_Faces:
     unique_faces = {}
     unique_face_encodings = None
     
-    def __init__(self,video_path,config):
+    def __init__(self,video_path,config=None):
         self.video_path = video_path
         self.config = config
 
