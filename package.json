@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@cloudinary/react": "^1.13.0",
+    "axios": "^1.7.2",
     "boostrap": "^2.0.0",
     "bootstrap": "^5.3.3",
     "cloudinary": "^2.2.0",

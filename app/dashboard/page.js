@@ -30,7 +30,7 @@ function Dashboard() {
         </div>
       ) : (
         <FadeInWhenVisible>
-            <VideoPlayerComponent />
+          <VideoPlayerComponent />
         </FadeInWhenVisible>
       )}
     </div>
