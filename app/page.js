@@ -5,7 +5,7 @@ import SignIn from "./components/signin/SignIn";
 
 export default function Home() {
   return (
-    <Background>
+    <Background width={450}>
       <SignIn />
     </Background>
   );
