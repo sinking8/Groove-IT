@@ -4,5 +4,9 @@ import Background from "./components/background";
 import SignIn from "./components/signin/SignIn";
 
 export default function Home() {
-  return <Background children={<SignIn />} />;
+  return (
+    <Background>
+      <SignIn />
+    </Background>
+  );
 }

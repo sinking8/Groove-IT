@@ -38,6 +38,7 @@ function VideoPlayerComponent() {
                 forceUpdate();
               }}
               className="btn btn-primary m-2"
+              key={video[0]}
             >
               {video[0]}
             </button>
