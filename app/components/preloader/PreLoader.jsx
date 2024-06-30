@@ -1,5 +1,4 @@
 "use client ";
-import React, { Component } from "react";
 
 import React, { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
