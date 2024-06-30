@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 from daltonize import daltonize
 from moviepy.editor import VideoFileClip
@@ -10,7 +12,10 @@ class ColorBlind:
     cache_dir = os.environ['VIDEO_CACHE']
     def __init__(self,video_path,config=None):
         self.video_path = video_path
-        self.cache_dir = f'{config['env']['CACHE_DIR']}/video_cache'
+        if(config is None):
+            self.cache_dir = os.environ['VIDEO_CACHE']
+        else:
+            self.cache_dir = f'{config['env']['CACHE_DIR']}/video_cache'
 
     def daltonize_video(self,daltonize_type='d'):
         # Daltonize Types
@@ -30,5 +35,5 @@ class ColorBlind:
             return {"status": False, "message": "Error daltonizing video","error":e}
         
 # Test Code
-color_blind = ColorBlind("./test_videos/test1.mov")
-color_blind.daltonize_video('d')
+# color_blind = ColorBlind("./test_videos/test1.mov")
+# color_blind.daltonize_video('d')

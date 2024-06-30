@@ -1,5 +1,8 @@
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import cv2
 import PIL
 
@@ -35,11 +38,15 @@ class ImageCaption:
 
     def __init__(self, video_path,config=None):
         self.video_path = video_path
-        genai.configure(api_key=config['env']['GEMINI_API_KEY'])
+
+        if(config is None):
+            genai.configure(api_key=os.environ['GEMINI_API_KEY'])
+            self.cache_dir = os.environ['CACHE_DIR']+"/video_cache"
+        else:
+            genai.configure(api_key=config['env']['GEMINI_API_KEY'])
+            self.cache_dir = config['env']['CACHE_DIR']+"/video_cache"
     
         self.model = genai.GenerativeModel('gemini-1.5-flash', safety_settings=self.safety_settings)
-        self.cache_dir = config['env']['CACHE_DIR']+"/video_cache"
-
         self.file_name = os.path.basename(self.video_path).split('.')[0]
 
     def attach_caption(self,frame,delay):

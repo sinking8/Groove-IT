@@ -3,15 +3,27 @@ from pathlib import Path
 
 import os
 
+import cloudinary
+import cloudinary.uploader
+
+def set_environment_variables(config):
+    # Setting up the environment variables
+    for key,value in config['db'].items():
+        os.environ[key] = value
+
+    # Setting HuggingFace URLS
+    for key,value in config['hugging_face_urls'].items():
+        os.environ[key] = value
+
+    os.environ['CACHE_DIR'] = config['env']['CACHE_DIR']
+
 def load_config():
     config_path = Path(os.environ.get("config_toml"))
     try:
         with open(config_path, "r") as f:
             config = toml.load(f)
-        # Setting up the environment variables
-        for key, value in config.items():
-            os.environ[key] = str(value)
-
+        
+        set_environment_variables(config)
         return config
     
     except FileNotFoundError:
@@ -19,3 +31,13 @@ def load_config():
     
     except Exception as e:
         raise Exception(f"Error loading config: {e}")
+    
+async def upload_video_cloudinary(video_path,config):
+    cloudinary.config(
+        cloud_name = os.environ.get("CLOUDINARY_APP_NAME"),
+        api_key = os.environ.get("CLOUDINARY_API_KEY"),
+        api_secret = os.environ.get("CLOUDINARY_API_SECRET")
+    )
+    response = cloudinary.uploader.upload_large(video_path, resource_type="video")
+    response_dict = {'public_id':response[u'public_id'],'url':response[u'url']}
+    return response_dict

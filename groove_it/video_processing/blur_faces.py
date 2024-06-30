@@ -6,6 +6,9 @@ import face_recognition
 
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 class Blur_Faces:
     # Cascades Dir
     face_cascade_path = "./cascades/haarcascade_frontalface_alt2.xml"
@@ -18,7 +21,11 @@ class Blur_Faces:
         self.video_path = video_path
         self.config = config
 
-        self.cache_dir = self.config['env']['CACHE_DIR']+"/video_cache"
+        if(config is None):
+            self.cache_dir = os.environ['VIDEO_CACHE']+"/video_cache"
+        else:
+            self.cache_dir = self.config['env']['CACHE_DIR']+"/video_cache"
+        
         self.file_name = os.path.basename(self.video_path).split('.')[0]
 
         # Create Cache Dir
@@ -98,7 +105,7 @@ class Blur_Faces:
         clip = VideoFileClip(self.video_path)
         modifiedClip = clip.fl_image(lambda x: self.blur_face(x,faces=faces))
         modifiedClip.write_videofile(f"{self.cache_dir}/{self.file_name}_blurred.mp4")
-        return f"{self.cache_dir}/blurred.mp4"
+        return f"{self.cache_dir}/{self.file_name}_blurred.mp4"
 
 # Test    
 # Fetch Frames

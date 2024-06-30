@@ -8,7 +8,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_together.embeddings import TogetherEmbeddings
 from langchain_community.vectorstores import MongoDBAtlasVectorSearch
 
-# from teach_it.utils import load_config
+
 from groove_it.utils import load_config
 
 class Document:
