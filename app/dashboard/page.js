@@ -31,9 +31,9 @@ function Dashboard() {
         </div>
       ) : (
         <FadeInWhenVisible>
-          <DashBoardBackground
-            children={<VideoPlayerComponent />}
-          ></DashBoardBackground>
+          <DashBoardBackground>
+            <VideoPlayerComponent />
+          </DashBoardBackground>
         </FadeInWhenVisible>
       )}
     </div>

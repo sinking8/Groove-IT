@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
         <script
           src="https://cdn.jsdelivr.net/npm/cloudinary-video-player/dist/cld-video-player.min.js"
           type="text/javascript"
+          async
         ></script>
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
           integrity="sha512-d6sc8kbZEtA2LwB9m/ck0FhvyUwVfdmvTeyJRprmj7Wg9wRFtHDIpr6qk4g/y3Ix3O9I6KHIv6SGu9f7RaP1Gw=="
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
+          async
         ></script>
       </head>
       <body className={inter.className} style={{ overflowX: "hidden" }}>
