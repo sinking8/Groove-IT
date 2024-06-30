@@ -15,11 +15,16 @@ class Blur_Faces:
     faces_cache_dir = "faces"
     cache_dir = None
     unique_faces = {}
+    unique_faces_dirs = []
     unique_face_encodings = None
     
     def __init__(self,video_path,config=None):
         self.video_path = video_path
         self.config = config
+
+        self.unique_faces = {}
+        self.unique_faces_dirs = []
+        self.unique_face_encodings = None
 
         if(config is None):
             self.cache_dir = os.environ['VIDEO_CACHE']+"/video_cache"
@@ -40,7 +45,9 @@ class Blur_Faces:
         for i,face in enumerate(faces):
             (top,right,bottom,left) = face
             roi_color = frame[top:bottom, left:right,:]
-            cv2.imwrite(f"{self.cache_dir}/{self.faces_cache_dir}/{self.file_name}_face_{i}.png", roi_color)
+            file_name = f'{self.file_name}_face_{i}.png'
+            self.unique_faces_dirs.append(f"{self.cache_dir}/{self.faces_cache_dir}/{file_name}")
+            cv2.imwrite(f"{self.cache_dir}/{self.faces_cache_dir}/{file_name}", roi_color)
 
     def unique_face_check(self,frame):
         face_encodings = face_recognition.face_encodings(frame)
@@ -69,7 +76,7 @@ class Blur_Faces:
             # Save Unique Face Dict
             self.unique_faces = dict(zip(range(len(self.unique_face_encodings)), self.unique_face_encodings))
 
-            return {"status": True, "unique_faces": list(self.unique_faces.keys()),"faces_dirs": f"{self.cache_dir}"}
+            return {"status": True, "unique_faces": self.unique_faces_dirs,"faces_dirs": f"{self.cache_dir}"}
         
         except Exception as e:
             print(e)

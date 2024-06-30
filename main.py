@@ -4,6 +4,7 @@ os.environ["config_toml"] = "config.toml"
 
 from typing import Union
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import UploadFile, File
 from fastapi.responses import FileResponse
 
@@ -11,9 +12,17 @@ from groove_it.utils import load_config, upload_video_cloudinary
 from groove_it.groove_it import User
 from groove_it.video_processing.blur_faces import Blur_Faces
 from groove_it.video_processing.color_blind import ColorBlind
-from groove_it.video_processing.avl_translate import AVL_Translate
+from groove_it.video_processing.avl import AVL_Translate
 
 app  = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 config = load_config()
 
 @app.get("/")
@@ -44,10 +53,12 @@ async def get_faces_cloudinary(cloudinary_url:str):
     # Download Video from cloudinary_url
     try:
         response = requests.get(cloudinary_url)
+        file_name = cloudinary_url.split('/')[-1]
+        print(file_name)
         if(os.getenv("CACHE_DIR") is None):
-            file_path = f"{config['env']['CACHE_DIR']}/video.mp4"
+            file_path = f"{config['env']['CACHE_DIR']}/{file_name}"
         else:
-            file_path = f"{os.getenv('CACHE_DIR')}/video.mp4"
+            file_path = f"{os.getenv('CACHE_DIR')}/{file_name}"
 
         with open(file_path, "wb") as f:
             f.write(response.content)
@@ -56,7 +67,7 @@ async def get_faces_cloudinary(cloudinary_url:str):
     else:
         blur_faces = Blur_Faces(file_path,config=config)
         result = blur_faces.detect_unique_faces()
-        result["faces"] = [FileResponse(f"{result['faces_dirs']}/face_{i}.png",media_type="image/png",filename=f'face_{i}.png') for i in result['unique_faces']]
+        result["faces"] = [FileResponse(f"{i}",media_type="image/png",filename=i.split('/')[-1]) for i in result['unique_faces']]
 
         # Read images from cache and return
         return result
@@ -137,10 +148,13 @@ async def clear_cache():
     else:
         return {"status": "success"}
 
-@app.get("/download_face/{face_id}")
-async def download_face(face_id:int):
-    return FileResponse(f"video_cache/faces/face_{face_id}.png",media_type="image/png",filename=f'face_{face_id}.png')
-
+@app.get("/download_face/{file_name}")
+async def download_face(file_name:str):
+    if(os.getenv("CACHE_DIR") is None):
+        file_dir = f"{config['env']['CACHE_DIR']}/video_cache/faces"
+    else:
+        file_dir = f"{os.getenv('CACHE_DIR')}/video_cache/faces"
+    return FileResponse(f"{file_dir}/{file_name}",media_type="image/png",filename=file_name)
 
 @app.post("/daltonize_video_cloudinary",responses={200: {"description":"Daltonized Video"}})
 async def daltonize_video_cloudinary(cloudinary_url:str,video_name:str,daltonize_type:str="d"):

@@ -6,6 +6,12 @@ import os
 import cloudinary
 import cloudinary.uploader
 
+import string
+import random
+
+def generate_random_string(length=10):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
 def set_environment_variables(config):
     # Setting up the environment variables
     for key,value in config['db'].items():
