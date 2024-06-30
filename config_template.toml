@@ -3,9 +3,20 @@ CACHE_DIR = "./cache"
 
 [llm]
 TOGETHER_API_KEY = "#"
+EMBEDDING_MODEL = "#"
+OPENAI_API_KEY = "#"
+HUGGINGFACE_API_KEY = "#"
+GEMINI_API_KEY = "#"
 
 [db]
 MONGO_URI = "#"
+MONGO_DB = "#"
+MONGO_COLLECTION="#"
 REDIS_HOST = "#"
 REDIS_PORT = "#"
 REDIS_PASSWORD = "#"
+CLOUDINARY_URL="#"
+
+[hugging_face_urls]
+TTS_URL = "#"
+MUSIC_GEN_URL = "#"
