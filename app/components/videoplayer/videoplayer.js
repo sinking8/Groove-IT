@@ -33,7 +33,7 @@ function VideoPlayerComponent() {
             <div className="p-1">
               <Carousel interval={null} className="w-100">
                 {sample_videos.map((video) => (
-                <CarouselItem><SampleVideo video={video} setVideo={setVideo}/></CarouselItem>
+                <CarouselItem key={video.public_id}><SampleVideo video={video} setVideo={setVideo}/></CarouselItem>
               ))}
               </Carousel>  
             </div>
