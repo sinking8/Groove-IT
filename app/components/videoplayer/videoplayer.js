@@ -1,20 +1,19 @@
 "use client";
 
 import React from "react";
+import { Card, CardBody, CardTitle, CarouselItem } from "react-bootstrap";
 import CloudinaryWidgetButton from "./videoplayeruploadwidget";
+import SampleVideo from "../sample_video/SampleVideo";
+import { Carousel } from "react-bootstrap";
 import { useState } from "react";
 
 const sample_videos = [
-  ["Sea Turtle", "samples/sea-turtle"],
-  ["dance", "samples/dance-2"],
-  ["elephants", "samples/elephants"],
+  {"video_name":"Dance","public_id":"samples/dance-2","cloud_name":"demo"},
+  {"video_name":"people","public_id":"yabsftz11bglblauxva0","cloud_name":"dmr4n68im"}
 ];
 
 function VideoPlayerComponent() {
-  const [video, setVideo] = useState("samples/elephants");
-  const [, updateState] = React.useState();
-  const forceUpdate = React.useCallback(() => updateState({}), []);
-
+  const [video, setVideo] = useState({"cloud_name":"demo","public_id":"samples/dance-2"});
   return (
     <div className="m-0 p-0 container">
       <div
@@ -26,32 +25,32 @@ function VideoPlayerComponent() {
         }}
       >
         <div
-          className="col-2"
+          className="col-3"
           style={{ backgroundColor: "white", borderRadius: "10px" }}
         >
+          <div className="row p-3">
           <CloudinaryWidgetButton />
-          {sample_videos.map((video) => (
-            <button
-              onClick={() => {
-                alert(video[1]);
-                setVideo(video[1]);
-                forceUpdate();
-              }}
-              className="btn btn-primary m-2"
-              key={video[0]}
-            >
-              {video[0]}
-            </button>
-          ))}
+            <div className="p-1">
+              <Carousel interval={null} className="w-100">
+                {sample_videos.map((video) => (
+                <CarouselItem><SampleVideo video={video} setVideo={setVideo}/></CarouselItem>
+              ))}
+              </Carousel>  
+            </div>
+          </div>
+          <div className="row p-3">
+            <button className="btn btn-warning">Detect Faces</button>
+          </div>
+        
         </div>
-        <div className="col col-8">
+        <div className="col col-9">
           <div className="row w-100 p-2">
             <iframe
               src={
-                "https://player.cloudinary.com/embed/?cloud_name=demo&public_id=" +
-                video
+                "https://player.cloudinary.com/embed/?cloud_name="+video.cloud_name+"&public_id=" +
+                video.public_id
               }
-              width="0"
+              width="700"
               height="360"
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
               allowfullscreen
@@ -67,12 +66,6 @@ function VideoPlayerComponent() {
               height: "50px",
             }}
           ></div>
-        </div>
-        <div
-          className="col-2"
-          style={{ backgroundColor: "white", borderRadius: "10px" }}
-        >
-          <h1>Hello</h1>
         </div>
       </div>
     </div>

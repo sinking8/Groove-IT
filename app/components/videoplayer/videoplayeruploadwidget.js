@@ -50,12 +50,13 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId }) {
 
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
-      <button
-        id="upload_widget"
-        className="btn btn-primary"
-        onClick={initializeCloudinaryWidget}
+      <button id="upload_widge" className="cyber_btn mt-2" onClick={initializeCloudinaryWidget}
       >
-        Upload
+        <span className="cyber_btn__content">
+            Upload your Video
+        </span>
+        <span className="cyber_btn__glitch"></span>
+        <span className="cyber_btn__label">r25</span>
       </button>
     </CloudinaryScriptContext.Provider>
   );
