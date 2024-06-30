@@ -11,8 +11,8 @@ function SignIn() {
       <div
         style={{
           backgroundColor: "transparent",
-          marginTop: "35%",
-          marginLeft: "10.5%",
+          marginTop: "15%",
+          marginLeft: "2%",
         }}
       >
         <TypeAnimation
@@ -28,9 +28,14 @@ function SignIn() {
           repeat={Infinity}
         />
       </div>
-      <button className="cyber_btn mt-5" style={{ marginLeft: "50%" }}>
+      <button className="cyber_btn" style={{ marginLeft: "20%" }}>
         <span className="cyber_btn__content">
-          <Link href="/dashboard">Press to get Started</Link>
+          <Link
+            href="/dashboard"
+            style={{ color: "black", textDecoration: "none" }}
+          >
+            Press to get Started
+          </Link>
         </span>
         <span className="cyber_btn__glitch"></span>
         <span className="cyber_btn__label">r25</span>

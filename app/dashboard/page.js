@@ -5,6 +5,8 @@ import ReactLoading from "react-loading";
 import FadeInWhenVisible from "../components/animations/fadeinwhenvisible";
 
 import styles from "./Dashboard.module.css";
+import VideoPlayerComponent from "../components/videoplayer/videoplayer";
+import DashBoardBackground from "../components/dashboard_background";
 
 function Dashboard() {
   const [done, setDone] = useState(undefined);
@@ -29,9 +31,9 @@ function Dashboard() {
         </div>
       ) : (
         <FadeInWhenVisible>
-          <ul>
-            <h3 style={{ color: "white" }}>Hello</h3>
-          </ul>
+          <DashBoardBackground
+            children={<VideoPlayerComponent />}
+          ></DashBoardBackground>
         </FadeInWhenVisible>
       )}
     </div>

@@ -4,5 +4,5 @@ import Background from "./components/background";
 import SignIn from "./components/signin/SignIn";
 
 export default function Home() {
-  return <Background width={"2000"} children={<SignIn />} />;
+  return <Background children={<SignIn />} />;
 }
