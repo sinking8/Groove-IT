@@ -46,7 +46,7 @@ class Blur_Faces:
             (top,right,bottom,left) = face
             roi_color = frame[top:bottom, left:right,:]
             file_name = f'{self.file_name}_face_{i}.png'
-            self.unique_faces_dirs.append(f"{self.cache_dir}/{self.faces_cache_dir}/{file_name}")
+            self.unique_faces_dirs.append(file_name)
             cv2.imwrite(f"{self.cache_dir}/{self.faces_cache_dir}/{file_name}", roi_color)
 
     def unique_face_check(self,frame):
@@ -74,7 +74,7 @@ class Blur_Faces:
             clip.fl_image(lambda x: self.unique_face_check(x))
 
             # Save Unique Face Dict
-            self.unique_faces = dict(zip(range(len(self.unique_face_encodings)), self.unique_face_encodings))
+            self.unique_faces = dict(zip(self.unique_faces_dirs, self.unique_face_encodings))
 
             return {"status": True, "unique_faces": self.unique_faces_dirs,"faces_dirs": f"{self.cache_dir}"}
         
@@ -82,6 +82,15 @@ class Blur_Faces:
             print(e)
             return {"status": False, "message": "Error detecting unique faces"}
           
+
+    def populate_unique_faces(self,unique_faces_file_names):
+        for img_fname in unique_faces_file_names:
+            img_path = f"{self.cache_dir}/{self.faces_cache_dir}/{img_fname}"
+            img = cv2.imread(img_path)
+            print(type(img))
+            face_encoding = face_recognition.face_encodings(img)
+            self.unique_faces[img_fname] = face_encoding
+
     def blur_face(self,frame,faces='all'):
         detected_faces = face_recognition.face_locations(frame)
         new_frame = np.copy(frame)
@@ -100,6 +109,7 @@ class Blur_Faces:
             for face, face_encoding in zip(detected_faces,face_encodings):
                 # If there is a match blur
                 match = face_recognition.compare_faces(blur_faces, face_encoding)
+                # print(match)
                 if any(match):
                     (top,right,bottom,left) = face
                     roi_color = frame[top:bottom, left:right]

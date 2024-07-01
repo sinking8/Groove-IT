@@ -45,5 +45,5 @@ async def upload_video_cloudinary(video_path,config):
         api_secret = os.environ.get("CLOUDINARY_API_SECRET")
     )
     response = cloudinary.uploader.upload_large(video_path, resource_type="video")
-    response_dict = {'public_id':response[u'public_id'],'url':response[u'url']}
+    response_dict = {'public_id':response[u'public_id'],'url':response[u'url'],"cloud_name":os.environ.get("CLOUDINARY_APP_NAME")}
     return response_dict

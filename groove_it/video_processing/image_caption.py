@@ -10,8 +10,9 @@ import google.generativeai as genai
 
 class ImageCaption:
     counter_cnx = 0
-    standard_delay = 30
+    standard_delay = 50
     response  = "This is a test caption"
+    captions = ''
 
     safety_settings = [
     {
@@ -43,7 +44,7 @@ class ImageCaption:
             genai.configure(api_key=os.environ['GEMINI_API_KEY'])
             self.cache_dir = os.environ['CACHE_DIR']+"/video_cache"
         else:
-            genai.configure(api_key=config['env']['GEMINI_API_KEY'])
+            genai.configure(api_key=config['llm']['GEMINI_API_KEY'])
             self.cache_dir = config['env']['CACHE_DIR']+"/video_cache"
     
         self.model = genai.GenerativeModel('gemini-1.5-flash', safety_settings=self.safety_settings)
@@ -63,6 +64,7 @@ class ImageCaption:
             response = self.model.generate_content(["Write a short description of the image.",img])
             if(response!=None):
                 self.response = response.text
+                self.captions+=self.response
 
         cv2.putText(frame, self.response, (10, 30), font, font_scale, font_color, line_type)
         return frame,delay-1
@@ -85,6 +87,7 @@ class ImageCaption:
             cv2.destroyAllWindows()
             out.release()
             self.counter_cnx = 0
+            return {"status": True, "captioned_video":f"{self.cache_dir}/{self.file_name}_captioned.mp4","message":"Successfully generated caption","captions":self.captions}
 
         except Exception as e:
             print(e)
