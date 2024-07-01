@@ -5,23 +5,24 @@ import requests
 import io
 from pydub import AudioSegment
 
-os.environ['llm']= str({"HUGGINGFACE_API_KEY":"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"})
-os.environ['hugging_face_urls'] = str({"MUSIC_GEN_URL":"https://api-inference.huggingface.co/models/facebook/musicgen-small"})
-os.environ['VIDEO_CACHE']= "./video_cache"
-
 class AudioGen:
-    llm_config = {}
-    hugging_face_urls = {}
-    
     def __init__(self,video_path,config):
         self.video_path = video_path
-        self.llm_config = eval(os.environ['llm'])
-        self.hugging_face_urls = eval(os.environ['hugging_face_urls'])
-        self.cache_dir = f'{config['env']['CACHE_DIR']}/video_cache'
+        if(config is None):
+            self.HUGGINGFACE_API_KEY = os.environ['HUGGINGFACE_API_KEY']
+            self.MUSIC_GEN_URL = os.environ['MUSIC_GEN_URL']
+            self.cache_dir = f'{os.environ["CACHE_DIR"]}/video_cache'
+
+        else:
+            self.HUGGINGFACE_API_KEY = config['llm']['HUGGINGFACE_API_KEY']
+            self.MUSIC_GEN_URL = config['hugging_face_urls']['MUSIC_GEN_URL']
+            self.cache_dir = f'{config['env']['CACHE_DIR']}/video_cache'
+
+        self.file_name = os.path.basename(self.video_path).split('.')[0]
 
     def query(self,payload):
-        headers = {"Authorization": f"Bearer {self.llm_config['HUGGINGFACE_API_KEY']}"}
-        response = requests.post(self.hugging_face_urls['MUSIC_GEN_URL'], headers=headers, json=payload)
+        headers = {"Authorization": f"Bearer {self.HUGGINGFACE_API_KEY}"}
+        response = requests.post(self.MUSIC_GEN_URL, headers=headers, json=payload)
         return response.content
 
     def generate_audio(self,content):
@@ -39,7 +40,7 @@ class AudioGen:
             audio = self.generate_audio(content)
  
             # Save Audio file
-            audio_file_path = f"{os.environ['VIDEO_CACHE']}/audio.wav"
+            audio_file_path = f"{self.cache_dir}/{self.file_name}_audio.wav"
             self.save_audio(audio, audio_file_path)
                             
             # Combine Audio with the video file
@@ -49,7 +50,7 @@ class AudioGen:
             composite_audio = CompositeAudioClip([audio_clip])
             clip.audio = composite_audio
 
-            output_file_path = f"{self.cache_dir}/{os.path.basename(self.video_path).split('.')[0]}_updated_audio.mp4"
+            output_file_path = f"{self.cache_dir}/{self.file_name}_updated_audio.mp4"
             clip.write_videofile(output_file_path)
 
             return {"status": True, "updated_video":output_file_path,"message":"Successfully added audio to video"}
@@ -57,7 +58,3 @@ class AudioGen:
         except Exception as e:
             print(e)
             return {"status": False, "message": "Error adding audio to video","error":e}
-
-# Test Code
-# audio_gen = AudioGen("./test_videos/test1.mov")
-# print(audio_gen.add_audio("Happy Birthday to you"))

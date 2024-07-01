@@ -230,6 +230,7 @@ async def generate_caption_cloudinary(cloudinary_url:str):
 async def bg_music_cloudinary(cloudinary_url:str):
     # Download Video from cloudinary_url
     try:
+        print("I came in ")
         response = requests.get(cloudinary_url)
         file_name = cloudinary_url.split('/')[-1]
         if(os.getenv("CACHE_DIR") is None):
