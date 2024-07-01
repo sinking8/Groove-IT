@@ -240,14 +240,28 @@ function VideoPlayerComponent() {
             </div>
           </div>
           <div className="col col-9">
-            <div className="row w-100 p-2">
+            <div className="row ml-5">
               {loading ? (
-                <ReactLoading
-                  type={"bubbles"}
-                  color={"#00f2ea"}
-                  height={100}
-                  width={100}
-                />
+                <div
+                  style={{ paddingTop: "15%", paddingLeft: "50%" }}
+                  className="w-100 m-2"
+                >
+                  <ReactLoading
+                    type={"spinningBubbles"}
+                    color={"white"}
+                    height={110}
+                    width={110}
+                  />
+                  <h4
+                    style={{
+                      color: "white",
+                      marginTop: "10%",
+                      marginLeft: "-2%",
+                    }}
+                  >
+                    Processing....
+                  </h4>
+                </div>
               ) : (
                 <iframe
                   src={
@@ -256,7 +270,7 @@ function VideoPlayerComponent() {
                     "&public_id=" +
                     video.public_id
                   }
-                  width="1000"
+                  width="3000"
                   height="360"
                   allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                   allowfullscreen
