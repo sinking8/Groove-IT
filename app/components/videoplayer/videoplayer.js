@@ -146,6 +146,28 @@ function VideoPlayerComponent() {
       });
   };
 
+  const tunify = async () => {
+    let cloudinary_url = construct_cloudinary_url(
+      video.public_id,
+      video.cloud_name
+    );
+    setLoading(true);
+    setImages([]);
+    axios
+      .post(
+        server_url + "/bg_music_cloudinary?cloudinary_url=" + cloudinary_url
+      )
+      .then((response) => {
+        console.log(response);
+        setVideo({
+          cloud_name: response.data.response_dict["cloud_name"],
+          public_id: response.data.response_dict["public_id"],
+        });
+        setLoading(false);
+        setActivated(true);
+      });
+  };
+
   return (
     <>
       <div className="m-0 p-0 container">
@@ -203,6 +225,17 @@ function VideoPlayerComponent() {
                 disabled={!activated}
               >
                 Captionize
+              </button>
+
+              <button
+                className="btn btn-danger mt-2"
+                onClick={() => {
+                  setActivated(false);
+                  tunify();
+                }}
+                disabled={!activated}
+              >
+                Tunify
               </button>
             </div>
           </div>
