@@ -1,0 +1,7 @@
+{
+  "templates": {
+    "avl_support_prompt": {
+      "prompt": "You are a Sign Language Translator. In a video, sign language characters have been detected every {DELAY} frame and are provided as a comma-separated list (e.g., A,B,C). Here are the characters ({RESPONSE}). Please decode the sequence of characters and provide a concise one-line response indicating what the person is trying to say. I just want the translation and dont require any explanation"
+    }
+  }
+}

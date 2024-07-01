@@ -21,6 +21,7 @@ def set_environment_variables(config):
     for key,value in config['hugging_face_urls'].items():
         os.environ[key] = value
 
+    os.environ['PROMPTS_JSON'] = config['env']['PROMPTS_JSON']
     os.environ['CACHE_DIR'] = config['env']['CACHE_DIR']
 
 def load_config():

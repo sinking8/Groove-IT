@@ -13,7 +13,7 @@ from groove_it.groove_it import User
 from groove_it.video_processing.blur_faces import Blur_Faces
 from groove_it.video_processing.color_blind import ColorBlind
 from groove_it.video_processing.image_caption import ImageCaption
-from groove_it.video_processing.audio_gen import AudioGen
+from groove_it.video_processing.audio_gen import *
 from groove_it.video_processing.avl import AVL_Translate
 
 app  = FastAPI()
@@ -143,16 +143,6 @@ async def download_blur_video(video_name:str):
     base_name = os.path.basename(video_name).split('.')[0]
     return FileResponse(f"video_cache/{base_name}_blurred.mp4",media_type="video/mp4",filename=f'video_{base_name}_blurred.mp4')
 
-@app.post("/clear_cache")
-async def clear_cache():
-    try:
-        os.system(f"rm -r {config['env']['CACHE_DIR']}/*")
-        os.system(f"rm -r {config['env']['CACHE_DIR']}/*")
-    except Exception as e:
-        return{"error": f"Error clearing cache: {e}"}
-    else:
-        return {"status": "success"}
-
 @app.get("/download_face/{file_name}")
 async def download_face(file_name:str):
     if(os.getenv("CACHE_DIR") is None):
@@ -234,6 +224,45 @@ async def generate_caption_cloudinary(cloudinary_url:str):
         file_base_name = os.path.basename(file_path).split('.')[0]
         return {"status":"success","captioned_video":FileResponse(result['captioned_video'],media_type="video/mp4",filename=f"{file_base_name}_captioned.mp4"),"response_dict":response_dict}
 
+@app.post("/bg_music_cloudinary",responses={200: {"description":"Tuned Video"}})
+async def bg_music_cloudinary(cloudinary_url:str):
+    # Download Video from cloudinary_url
+    try:
+        response = requests.get(cloudinary_url)
+        file_name = cloudinary_url.split('/')[-1]
+        if(os.getenv("CACHE_DIR") is None):
+            file_path = f"{config['env']['CACHE_DIR']}/{file_name}"
+        else:
+            file_path = f"{os.getenv('CACHE_DIR')}/{file_name}"
 
+        with open(file_path, "wb") as f:
+            f.write(response.content)
+    except Exception as e:
+        return{"error": f"Error saving file: {e}"} 
+    else:
+        image_caption_inst = ImageCaption(file_path,config=config)
+        result_img_caption = image_caption_inst.generate_caption()
+
+        if(result_img_caption['status']==False):
+            return {"error": "Error generating caption"}
+    
+        audio_gen = AudioGen(file_path,config=config)
+        result_audio_gen = audio_gen.add_audio(result_img_caption['captions'])
+
+        # Upload the file to cloudinary
+        response_dict = await upload_video_cloudinary(result_audio_gen['updated_video'],config)    
+
+        file_base_name = os.path.basename(file_path).split('.')[0]
+        return {"status":"success","bg_music_video":FileResponse(result_audio_gen['updated_video'],media_type="video/mp4",filename=f"{file_base_name}_bg_music.mp4"),"response_dict":response_dict}
+
+@app.post("/clear_cache")
+async def clear_cache():
+    try:
+        os.system(f"rm -r {config['env']['CACHE_DIR']}/*")
+        os.system(f"rm -r {config['env']['CACHE_DIR']}/*")
+    except Exception as e:
+        return{"error": f"Error clearing cache: {e}"}
+    else:
+        return {"status": "success"}
 
         
