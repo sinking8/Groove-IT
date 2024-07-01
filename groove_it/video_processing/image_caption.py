@@ -53,9 +53,10 @@ class ImageCaption:
     def attach_caption(self,frame,delay):
         # Setting the font and size for the caption
         font = cv2.FONT_HERSHEY_COMPLEX
-        font_scale = 1
+        font_scale = 2
         font_color = (255, 255, 255)
         line_type = 2
+        margin  = 20
 
         if(delay == 0):
             delay = self.standard_delay
@@ -67,7 +68,12 @@ class ImageCaption:
                 self.captions+=self.response
 
         ## Add the caption in the bottom center of the frame
-        cv2.putText(frame, self.response, (80, 30), font, font_scale, font_color, line_type)
+        text_size = cv2.getTextSize(self.response, font, font_scale, line_type)[0]
+        text_x = (frame.shape[1] - text_size[0]) // 2  # frame.shape[1] is the frame width
+        text_y = frame.shape[0] - margin  # frame.shape[0] is the frame height
+
+        # Add the caption in the bottom center of the frame
+        cv2.putText(frame, self.response, (text_x, text_y), font, font_scale, font_color, line_type)
         return frame,delay-1
         
     def generate_caption(self):

@@ -5,13 +5,7 @@ load_dotenv()
 import requests
 import cv2
 
-os.environ['VIDEO_CACHE']= "../cache"
-os.environ['HUGGINGFACE_API_KEY'] = "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"
-os.environ['AVL_URL'] = "https://api-inference.huggingface.co/models/joseluhf11/sign_language_classification"
-os.environ['TOGETHER_API_KEY'] = "e38fa712fc3270e8f6945048dcaf23ac84f0152e94ba66c0467d5faeb038a144"
-
-# from groove_it.llm.avl_support import *
-from llm.avl_support import ChatTogetherAVL
+from groove_it.video_processing.llm.avl_support import ChatTogetherAVL
 
 class AVL_Translate:
     translated_text = []
@@ -74,7 +68,3 @@ class AVL_Translate:
         else:
             response = self.avl_support.get_avl_response(self.translated_text,self.delay)
             return {"status": True, "message": "Successfully generated AVL description","translated_text":response}
-
-# Test
-avl_inst = AVL_Translate("./test_videos/test1.mov",delay=50)
-print(avl_inst.gen_avl_description())

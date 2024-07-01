@@ -17,6 +17,9 @@ def set_environment_variables(config):
     for key,value in config['db'].items():
         os.environ[key] = value
 
+    for key,value in config['llm'].items():
+        os.environ[key] = value
+
     # Setting HuggingFace URLS
     for key,value in config['hugging_face_urls'].items():
         os.environ[key] = value

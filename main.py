@@ -204,6 +204,7 @@ async def generate_caption_cloudinary(cloudinary_url:str):
     # Download Video from cloudinary_url
     try:
         response = requests.get(cloudinary_url)
+        print("I came in")
         file_name = cloudinary_url.split('/')[-1]
         if(os.getenv("CACHE_DIR") is None):
             file_path = f"{config['env']['CACHE_DIR']}/{file_name}"
@@ -217,6 +218,7 @@ async def generate_caption_cloudinary(cloudinary_url:str):
     else:
         image_caption = ImageCaption(file_path,config=config)
         result = image_caption.generate_caption()
+        print(result)
 
         # Upload Video in Cloudinary and Return Cloudinary Response
         response_dict = await upload_video_cloudinary(result['captioned_video'],config)
