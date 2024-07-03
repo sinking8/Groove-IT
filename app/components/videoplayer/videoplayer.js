@@ -46,6 +46,11 @@ function VideoPlayerComponent() {
   const [toastshow, settoastShow] = useState(true);
   const toggletoast = () => settoastShow(!toastshow);
 
+  const uwConfig = {
+    cloudName: "dmr4n68im",
+    uploadPreset: "ml_default",
+  };
+
   let server_url = process.env.NEXT_SERVER_URL;
 
   const anonymize = async () => {
@@ -184,7 +189,6 @@ function VideoPlayerComponent() {
             style={{ backgroundColor: "white", borderRadius: "10px" }}
           >
             <div className="row p-3">
-              <CloudinaryWidgetButton />
               <div className="p-1">
                 <Carousel interval={null} className="w-100">
                   {sample_videos.map((video) => (
@@ -195,9 +199,10 @@ function VideoPlayerComponent() {
                 </Carousel>
               </div>
             </div>
-            <div className="row p-3 m-0 mt-1">
+            <div className="row p-3 m-0">
+              <CloudinaryWidgetButton uwConfig={uwConfig} setVideo={setVideo} />
               <button
-                className="btn btn-warning"
+                className="btn btn-warning mt-5"
                 onClick={() => {
                   setActivated(false);
                   detect_faces();
@@ -270,11 +275,13 @@ function VideoPlayerComponent() {
                     "&public_id=" +
                     video.public_id
                   }
-                  width="3000"
-                  height="360"
+                  width="500"
+                  height="560"
                   allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                  className="ml-5"
                   allowfullscreen
                   frameborder="0"
+                  style={{ backgroundColor: "white", width: "100%" }}
                 ></iframe>
               )}
             </div>

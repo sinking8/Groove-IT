@@ -4,7 +4,7 @@ import { createContext, useEffect, useState } from "react";
 // Create a context to manage the script loading state
 const CloudinaryScriptContext = createContext();
 
-function CloudinaryUploadWidget({ uwConfig, setPublicId }) {
+function CloudinaryUploadWidget({ uwConfig, setVideo }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -32,8 +32,11 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId }) {
         uwConfig,
         (error, result) => {
           if (!error && result && result.event === "success") {
-            console.log("Done! Here is the image info: ", result.info);
-            setPublicId(result.info.public_id);
+            console.log("Done! Here is the Video info: ", result.info);
+            setVideo({
+              public_id: result.info.public_id,
+              cloud_name: uwConfig.cloudName,
+            });
           }
         }
       );
@@ -50,13 +53,12 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId }) {
 
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
-      <button id="upload_widge" className="cyber_btn mt-2" onClick={initializeCloudinaryWidget}
+      <button
+        id="upload_widget"
+        className="btn btn-primary p-4"
+        onClick={initializeCloudinaryWidget}
       >
-        <span className="cyber_btn__content">
-            Upload your Video
-        </span>
-        <span className="cyber_btn__glitch"></span>
-        <span className="cyber_btn__label">r25</span>
+        UPLOAD
       </button>
     </CloudinaryScriptContext.Provider>
   );
