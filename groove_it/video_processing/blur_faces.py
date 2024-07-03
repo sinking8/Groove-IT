@@ -95,7 +95,9 @@ class Blur_Faces:
         detected_faces = face_recognition.face_locations(frame)
         new_frame = np.copy(frame)
 
-        if faces == 'all':        
+
+
+        if faces == 'all' or 'all' in faces:        
             for (top,right,bottom,left) in detected_faces:     
                 roi_color = frame[top:bottom, left:right]
                 blur = cv2.GaussianBlur(roi_color, (99, 99), 30)
