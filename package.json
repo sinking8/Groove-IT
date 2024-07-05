@@ -22,6 +22,7 @@
     "p5": "^1.9.4",
     "react": "^18",
     "react-bootstrap": "^2.10.3",
+    "react-chatbotify": "^1.7.0",
     "react-cloudinary-upload-widget": "^2.0.0",
     "react-dom": "^18",
     "react-loading": "^2.0.3",

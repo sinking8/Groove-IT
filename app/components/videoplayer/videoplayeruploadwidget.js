@@ -32,7 +32,6 @@ function CloudinaryUploadWidget({ uwConfig, setVideo }) {
         uwConfig,
         (error, result) => {
           if (!error && result && result.event === "success") {
-            console.log("Done! Here is the Video info: ", result.info);
             setVideo({
               public_id: result.info.public_id,
               cloud_name: uwConfig.cloudName,
@@ -55,7 +54,7 @@ function CloudinaryUploadWidget({ uwConfig, setVideo }) {
     <CloudinaryScriptContext.Provider value={{ loaded }}>
       <button
         id="upload_widget"
-        className="btn btn-primary p-4"
+        className="btn btn-success p-3 "
         onClick={initializeCloudinaryWidget}
       >
         UPLOAD
