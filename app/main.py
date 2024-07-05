@@ -1,5 +1,6 @@
 import os
 import requests
+
 os.environ["config_toml"] = "config.toml"
 
 from typing import Union

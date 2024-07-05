@@ -1,6 +1,6 @@
 [env]
-CACHE_DIR = "./cache"
-PROMPTS_JSON = "./helpers/prompts.json"
+CACHE_DIR = "./app/cache"
+PROMPTS_JSON = "./app/helpers/prompts.json"
 
 [llm]
 TOGETHER_API_KEY = "e38fa712fc3270e8f6945048dcaf23ac84f0152e94ba66c0467d5faeb038a144"

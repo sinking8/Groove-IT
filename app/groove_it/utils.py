@@ -28,7 +28,7 @@ def set_environment_variables(config):
     os.environ['CACHE_DIR'] = config['env']['CACHE_DIR']
 
 def load_config():
-    config_path = Path(os.environ.get("config_toml"))
+    config_path = "./app/config.toml"
     try:
         with open(config_path, "r") as f:
             config = toml.load(f)
