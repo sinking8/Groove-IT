@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { Carousel, CarouselItem, Card, CardHeader } from "react-bootstrap";
+import { Carousel, CarouselItem, Card } from "react-bootstrap";
 import CloudinaryWidgetButton from "./videoplayeruploadwidget";
 import SampleVideo from "../sample_video/SampleVideo";
 import { useState } from "react";
-import ReactLoading from "react-loading";
-import { Button } from "react-bootstrap";
 
+import ReactLoading from "react-loading";
+import Button from "./Button";
+import { ButtonThemes, ButtonTypes, ButtonSizes } from "./buttonTypes";
 import Toast from "react-bootstrap/Toast";
 import axios from "axios";
 
@@ -25,7 +26,8 @@ const sample_videos = [
 const transformations = [
   { name: "REVERSE", transformation_string: "e_reverse" },
   { name: "VIGNETTE", transformation_string: "e_vignette" },
-  { name: "VISUAL NOISE", transformation_string: "e_noise:100" },
+  { name: "VIS NOISE", transformation_string: "e_noise:100" },
+  { name: "BLUR EFF", transformation_string: "e_blur:300" },
 ];
 
 const blind_options = [
@@ -34,7 +36,22 @@ const blind_options = [
   { name: "Tritanopia", blind_code: "t" },
 ];
 
-function construct_cloudinary_url(public_id, cloud_name, transformation = "") {
+function contruct_transformation_string(chosentransformations) {
+  let transformation_string = "";
+  if (chosentransformations == undefined || chosentransformations.length == 0) {
+    return transformation_string;
+  }
+  for (let i = 0; i < transformations.length; i++) {
+    transformation_string += transformations[i];
+    if (i != transformations.length - 1) {
+      transformation_string += "/";
+    }
+  }
+  return transformation_string;
+}
+
+function construct_cloudinary_url(public_id, cloud_name, transformations) {
+  const transformation = contruct_transformation_string(transformations);
   if (transformation == "") {
     return (
       "https://res.cloudinary.com/" +
@@ -71,18 +88,10 @@ function VideoPlayerComponent() {
   const [toastshow, settoastShow] = useState(true);
   const toggletoast = () => settoastShow(!toastshow);
 
-  const [currentTransformation, setCurrentTransformation] = useState("");
-  const [activeTransformation, setActiveTransformation] = useState("");
+  const [chosentransformations, setChosenTransformations] = useState([]);
   const [activeBlindOption, setActiveBlindOption] = useState("");
 
-  const handleToggle = (transformation) => {
-    // Toggle the transformation: if it's already active, deactivate it, otherwise activate it
-    const newTransformation =
-      activeTransformation === transformation ? "" : transformation;
-    setActiveTransformation(newTransformation);
-    // Optionally, apply the transformation immediately or update the video URL
-    setCurrentTransformation(newTransformation);
-  };
+  const [currentoption, setCurrentOption] = useState("");
 
   const uwConfig = {
     cloudName: "dmr4n68im",
@@ -238,13 +247,13 @@ function VideoPlayerComponent() {
 
   return (
     <>
-      <div className="m-0 p-0 container w-100 container-fluid">
+      <div className="m-0 p-0 container container-fluid">
         <div
           className="row"
           style={{
-            marginLeft: "5%",
+            marginLeft: "2.5%",
             paddingTop: "1%",
-            width: "208vh",
+            width: "213vh",
           }}
         >
           <div
@@ -262,109 +271,116 @@ function VideoPlayerComponent() {
                 </Carousel>
               </div>
             </div>
-            <div className="row m-2">
+            <div className="row m-2 p-0">
               <CloudinaryWidgetButton uwConfig={uwConfig} setVideo={setVideo} />
-              <Card className="mt-2 mb-2 p-2">
-                <CardHeader style={{ textAlign: "center", fontSize: "20px" }}>
+              <Card className="mt-2 p-0 mb-2">
+                <div
+                  className="ml-2"
+                  style={{ textAlign: "center", fontSize: "20px" }}
+                >
                   <b>Gen AI Tools</b>
-                </CardHeader>
+                </div>
                 <div className="card-body mt-1 p-0">
-                  <div className="container-fluid d-md-flex">
-                    <button
-                      className="btn"
-                      onClick={() => {
+                  <div className="row m-2">
+                    <Button
+                      size={ButtonSizes.MEDIUM}
+                      label="Anonymize"
+                      onClickHandler={() => {
                         setActivated(false);
+                        setCurrentOption("Anonymize");
                         detect_faces();
                       }}
+                      type={
+                        currentoption == "Anonymize"
+                          ? ButtonTypes.PRIMARY
+                          : ButtonTypes.SECONDARY
+                      }
                       disabled={!activated}
-                      style={{
-                        width: "50%",
-                        backgroundColor: "#29b5a8",
-                        color: "white",
-                      }}
-                    >
-                      Anonymize
-                    </button>
-                    <button
-                      className="btn ml-2"
-                      onClick={() => {
+                    />
+                  </div>
+                  <div className="row m-2 mt-0 p-0">
+                    <Button
+                      size={ButtonSizes.MEDIUM}
+                      label="Colorize"
+                      onClickHandler={() => {
                         setActivated(false);
+                        setCurrentOption("Colorize");
                         activate();
                       }}
                       disabled={!activated}
-                      style={{
-                        width: "50%",
-                        backgroundColor: "#29b5a8",
-                        color: "white",
-                      }}
-                    >
-                      Colorize
-                    </button>
+                      type={
+                        currentoption == "Colorize"
+                          ? ButtonTypes.PRIMARY
+                          : ButtonTypes.SECONDARY
+                      }
+                    />
                   </div>
-                  <div className="mt-2 container-fluid d-md-flex mt-2">
-                    <button
-                      className="btn"
-                      onClick={() => {
+                  <div className="row m-2">
+                    <Button
+                      size={ButtonSizes.MEDIUM}
+                      label="Captionize"
+                      onClickHandler={() => {
                         setActivated(false);
+                        setCurrentOption("Captionize");
                         captionize();
                       }}
                       disabled={!activated}
-                      style={{
-                        width: "50%",
-                        backgroundColor: "#29b5a8",
-                        color: "white",
-                      }}
-                    >
-                      Captionize
-                    </button>
-                    <button
-                      className="btn ml-2"
-                      onClick={() => {
+                      type={
+                        currentoption == "Captionize"
+                          ? ButtonTypes.PRIMARY
+                          : ButtonTypes.SECONDARY
+                      }
+                    />
+                  </div>
+                  <div className="row m-2">
+                    <Button
+                      size={ButtonSizes.MEDIUM}
+                      label="Tunify"
+                      onClickHandler={() => {
                         setActivated(false);
+                        setCurrentOption("Tunify");
                         tunify();
                       }}
                       disabled={!activated}
-                      style={{
-                        width: "50%",
-                        backgroundColor: "#29b5a8",
-                        color: "white",
-                      }}
-                    >
-                      Tunify
-                    </button>
+                      type={
+                        currentoption == "Tunify"
+                          ? ButtonTypes.PRIMARY
+                          : ButtonTypes.SECONDARY
+                      }
+                    />
                   </div>
-                  <div className="mt-2 container-fluid d-md-flex mt-2">
-                    <button
-                      className="btn"
-                      onClick={() => {
+
+                  <div className="row m-2">
+                    <Button
+                      size={ButtonSizes.MEDIUM}
+                      label="AVL Support"
+                      onClickHandler={() => {
                         setActivated(false);
+                        setCurrentOption("AVL Support");
                         avl_support();
                       }}
                       disabled={!activated}
-                      style={{
-                        width: "100%",
-                        backgroundColor: "#29b5a8",
-                        color: "white",
-                      }}
-                    >
-                      AVL Support
-                    </button>
+                      type={
+                        currentoption == "AVL Support"
+                          ? ButtonTypes.PRIMARY
+                          : ButtonTypes.SECONDARY
+                      }
+                    />
                   </div>
                 </div>
               </Card>
 
               {transformations.map((transformation) => (
                 <div
-                  className="flex container-fluid mt-1 justify-between p-2"
+                  className="flex container-fluid mt-2 ml-4 w-50 justify-end p-1 col"
                   style={{
                     borderRadius: "10px",
                     borderColor: "black",
-                    borderWidth: "1.8px",
+                    borderWidth: "1.1px",
+                    marginLeft: "1%",
                   }}
                 >
-                  <a style={{ fontSize: "16px" }}>
-                    <b>{transformation.name}</b>
-                  </a>
+                  <a style={{ fontSize: "16px" }}>{transformation.name}</a>
                   <button
                     key={transformation.name} // Ensure each button has a unique key
                     type="button"
@@ -373,15 +389,34 @@ function VideoPlayerComponent() {
                       `${styles["btn-toggle"]} ${styles["btn"]} ${
                         styles["btn-sm"]
                       } ${
-                        activeTransformation ===
-                        transformation.transformation_string
+                        chosentransformations.includes(
+                          transformation.transformation_string
+                        )
                           ? styles["active"]
                           : ""
                       }`
                     }
-                    onClick={() =>
-                      handleToggle(transformation.transformation_string)
-                    } // Use the new click handler
+                    onClick={() => {
+                      if (
+                        chosentransformations.includes(
+                          transformation.transformation_string
+                        )
+                      ) {
+                        setChosenTransformations(
+                          chosentransformations.filter(
+                            (transformation_string) =>
+                              transformation_string !==
+                              transformation.transformation_string
+                          )
+                        );
+                      } else {
+                        // Include the Transformation
+                        setChosenTransformations([
+                          ...chosentransformations,
+                          transformation.transformation_string,
+                        ]);
+                      }
+                    }} // Use the new click handler
                   >
                     <div className={styles["handle"]}></div>
                   </button>
@@ -417,7 +452,7 @@ function VideoPlayerComponent() {
                   src={construct_cloudinary_url(
                     video.public_id,
                     video.cloud_name,
-                    currentTransformation
+                    chosentransformations
                   )}
                   width="950"
                   height="580"
@@ -475,15 +510,15 @@ function VideoPlayerComponent() {
                       ></Card.Img>
                     </Card>
                   ))}
-                  <Button
-                    className="btn btn-warning col m-3"
+                  <btn
+                    className="btn btn-success col m-3"
                     style={{ fontSize: "1.5rem" }}
                     onClick={() => {
                       anonymize();
                     }}
                   >
                     <b>ANONYMIZE</b>
-                  </Button>
+                  </btn>
                 </>
               )}
               {blindoption ? (
