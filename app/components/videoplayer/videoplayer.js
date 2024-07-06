@@ -24,12 +24,14 @@ const sample_videos = [
 
 const transformations = [
   { name: "REVERSE", transformation_string: "e_reverse" },
-  {
-    name: "FADE IN & OUT",
-    transformation_string: "e_fade:2000/e_fade:-2000",
-  },
   { name: "VIGNETTE", transformation_string: "e_vignette" },
   { name: "VISUAL NOISE", transformation_string: "e_noise:100" },
+];
+
+const blind_options = [
+  { name: "Deuteranopia", blind_code: "d" },
+  { name: "Protanopia", blind_code: "p" },
+  { name: "Tritanopia", blind_code: "t" },
 ];
 
 function construct_cloudinary_url(public_id, cloud_name, transformation = "") {
@@ -61,6 +63,7 @@ function VideoPlayerComponent() {
   const [loading, setLoading] = useState(false);
   const [activated, setActivated] = useState(true);
   const [images, setImages] = useState([]);
+  const [blindoption, setBlindOption] = useState(false);
 
   const [chosenfaces, setChosenFaces] = useState([]);
   const [message, setMessage] = useState("");
@@ -70,6 +73,7 @@ function VideoPlayerComponent() {
 
   const [currentTransformation, setCurrentTransformation] = useState("");
   const [activeTransformation, setActiveTransformation] = useState("");
+  const [activeBlindOption, setActiveBlindOption] = useState("");
 
   const handleToggle = (transformation) => {
     // Toggle the transformation: if it's already active, deactivate it, otherwise activate it
@@ -87,8 +91,14 @@ function VideoPlayerComponent() {
 
   let server_url = process.env.NEXT_SERVER_URL;
 
+  const activate = async () => {
+    setImages([]);
+    setBlindOption(true);
+  };
   const anonymize = async () => {
+    setBlindOption(false);
     setLoading(true);
+
     let faces = "";
     if (chosenfaces.length == images.length) {
       faces = "all";
@@ -124,6 +134,7 @@ function VideoPlayerComponent() {
     );
     setLoading(true);
     setImages([]);
+    setBlindOption(false);
     axios
       .post(
         server_url + "/get_faces_cloudinary?cloudinary_url=" + cloudinary_url
@@ -136,7 +147,7 @@ function VideoPlayerComponent() {
       });
   };
 
-  const daltonize = async () => {
+  const daltonize = async (blind_option) => {
     let cloudinary_url = construct_cloudinary_url(
       video.public_id,
       video.cloud_name
@@ -147,10 +158,11 @@ function VideoPlayerComponent() {
       .post(
         server_url +
           "/daltonize_video_cloudinary?cloudinary_url=" +
-          cloudinary_url
+          cloudinary_url +
+          "&daltonize_type=" +
+          blind_option
       )
       .then((response) => {
-        console.log(response);
         setVideo({
           cloud_name: response.data.response_dict["cloud_name"],
           public_id: response.data.response_dict["public_id"],
@@ -166,6 +178,7 @@ function VideoPlayerComponent() {
       video.cloud_name
     );
     setLoading(true);
+    setBlindOption(false);
     setImages([]);
     axios
       .post(
@@ -196,11 +209,28 @@ function VideoPlayerComponent() {
         server_url + "/bg_music_cloudinary?cloudinary_url=" + cloudinary_url
       )
       .then((response) => {
-        console.log(response);
         setVideo({
           cloud_name: response.data.response_dict["cloud_name"],
           public_id: response.data.response_dict["public_id"],
         });
+        setLoading(false);
+        setActivated(true);
+      });
+  };
+
+  const avl_support = async () => {
+    let cloudinary_url = construct_cloudinary_url(
+      video.public_id,
+      video.cloud_name
+    );
+    setLoading(true);
+    setImages([]);
+    axios
+      .post(
+        server_url + "/avl_support_cloudinary?cloudinary_url=" + cloudinary_url
+      )
+      .then((response) => {
+        console.log(response);
         setLoading(false);
         setActivated(true);
       });
@@ -259,7 +289,7 @@ function VideoPlayerComponent() {
                       className="btn ml-2"
                       onClick={() => {
                         setActivated(false);
-                        daltonize();
+                        activate();
                       }}
                       disabled={!activated}
                       style={{
@@ -301,6 +331,23 @@ function VideoPlayerComponent() {
                       }}
                     >
                       Tunify
+                    </button>
+                  </div>
+                  <div className="mt-2 container-fluid d-md-flex mt-2">
+                    <button
+                      className="btn"
+                      onClick={() => {
+                        setActivated(false);
+                        avl_support();
+                      }}
+                      disabled={!activated}
+                      style={{
+                        width: "100%",
+                        backgroundColor: "#29b5a8",
+                        color: "white",
+                      }}
+                    >
+                      AVL Support
                     </button>
                   </div>
                 </div>
@@ -372,22 +419,23 @@ function VideoPlayerComponent() {
                     video.cloud_name,
                     currentTransformation
                   )}
-                  width="1000"
-                  height="570"
+                  width="950"
+                  height="580"
                   allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                  className="ml-5"
+                  className="ml-1"
                   allowfullscreen
                   frameborder="0"
-                  style={{ width: "100%" }}
+                  style={{ width: "92%" }}
                 ></iframe>
               )}
             </div>
             <div
-              className="row mt-2 container d-md-flex m-2 "
+              className="row mt-2 m-1 container d-md-flex "
               style={{
                 backgroundColor: "white",
                 borderRadius: "10px",
-                height: "14vh",
+                height: "13vh",
+                width: "90%",
               }}
             >
               {images.length == 0 || loading ? (
@@ -397,7 +445,7 @@ function VideoPlayerComponent() {
                   {images.map((image) => (
                     <Card
                       style={{
-                        width: "7rem",
+                        width: "6.8rem",
                         backgroundColor: chosenfaces.includes(image["filename"])
                           ? "#00f2ea"
                           : "white",
@@ -437,6 +485,29 @@ function VideoPlayerComponent() {
                     <b>ANONYMIZE</b>
                   </Button>
                 </>
+              )}
+              {blindoption ? (
+                <>
+                  {blind_options.map((blind_option) => (
+                    <Card
+                      style={{
+                        backgroundColor:
+                          activeBlindOption === blind_option.blind_code
+                            ? "#00f2ea"
+                            : "white",
+                      }}
+                      className="m-2 col p-2"
+                      onClick={(e) => {
+                        setActiveBlindOption(blind_option.blind_code);
+                        daltonize(blind_option.blind_code);
+                      }}
+                    >
+                      {blind_option.name}
+                    </Card>
+                  ))}
+                </>
+              ) : (
+                <div></div>
               )}
             </div>
           </div>

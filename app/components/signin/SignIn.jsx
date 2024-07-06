@@ -5,6 +5,8 @@ import React from "react";
 import { TypeAnimation } from "react-type-animation";
 import Link from "next/link";
 
+import styles from "./signin.module.css";
+
 function SignIn() {
   return (
     <div className="m-0 p-5">
@@ -28,18 +30,13 @@ function SignIn() {
           repeat={Infinity}
         />
       </div>
-      <button className="cyber_btn" style={{ marginLeft: "20%" }}>
-        <span className="cyber_btn__content">
-          <Link
-            href="/dashboard"
-            style={{ color: "black", textDecoration: "none" }}
-          >
-            Press to get Started
-          </Link>
-        </span>
-        <span className="cyber_btn__glitch"></span>
-        <span className="cyber_btn__label">r25</span>
-      </button>
+      <a id={styles.a} href="/dashboard">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Press to get Started
+      </a>
     </div>
   );
 }
