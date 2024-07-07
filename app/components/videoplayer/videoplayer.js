@@ -36,6 +36,51 @@ const blind_options = [
   { name: "Tritanopia", blind_code: "t" },
 ];
 
+flag = false;
+let utterance;
+
+if ("speechSynthesis" in window) {
+  var synth = speechSynthesis;
+  var flag = false;
+
+  //stop when change page ???(not sure)
+  if (synth.speaking) {
+    /* stop narration */
+    /* for safari */
+    flag = false;
+    synth.cancel();
+  }
+}
+
+function onClickPlay(content) {
+  if (!flag) {
+    flag = true;
+    utterance = new SpeechSynthesisUtterance(content);
+
+    utterance.onend = function () {
+      flag = false;
+    };
+    synth.speak(utterance);
+    let r = setInterval(() => {
+      console.log(speechSynthesis.speaking);
+      if (!speechSynthesis.speaking) {
+        clearInterval(r);
+      } else {
+        speechSynthesis.resume();
+      }
+    }, 14000);
+  }
+  if (synth.paused) {
+    synth.resume();
+  }
+}
+
+function onClickPause() {
+  if (synth.speaking && !synth.paused) {
+    synth.pause();
+  }
+}
+
 function contruct_transformation_string(chosentransformations) {
   let transformation_string = "";
   if (chosentransformations == undefined || chosentransformations.length == 0) {
@@ -81,7 +126,9 @@ function VideoPlayerComponent() {
   const [activated, setActivated] = useState(true);
   const [images, setImages] = useState([]);
   const [blindoption, setBlindOption] = useState(false);
+  const [avl, setAVL] = useState(false);
 
+  const [avldata, setAVLData] = useState({});
   const [chosenfaces, setChosenFaces] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -105,6 +152,7 @@ function VideoPlayerComponent() {
     setBlindOption(true);
   };
   const anonymize = async () => {
+    setAVL(false);
     setBlindOption(false);
     setLoading(true);
 
@@ -143,13 +191,13 @@ function VideoPlayerComponent() {
     );
     setLoading(true);
     setImages([]);
+    setAVL(false);
     setBlindOption(false);
     axios
       .post(
         server_url + "/get_faces_cloudinary?cloudinary_url=" + cloudinary_url
       )
       .then((response) => {
-        console.log(response);
         setImages(response.data.faces);
         setLoading(false);
         setActivated(true);
@@ -187,6 +235,7 @@ function VideoPlayerComponent() {
       video.cloud_name
     );
     setLoading(true);
+    setAVL(false);
     setBlindOption(false);
     setImages([]);
     axios
@@ -211,6 +260,7 @@ function VideoPlayerComponent() {
       video.public_id,
       video.cloud_name
     );
+    setAVL(false);
     setLoading(true);
     setImages([]);
     axios
@@ -241,6 +291,8 @@ function VideoPlayerComponent() {
       .then((response) => {
         console.log(response);
         setLoading(false);
+        setAVL(true);
+        setAVLData(response.data);
         setActivated(true);
       });
   };
@@ -372,6 +424,7 @@ function VideoPlayerComponent() {
 
               {transformations.map((transformation) => (
                 <div
+                  key={transformation.name}
                   className="flex container-fluid mt-2 ml-4 w-50 justify-end p-1 col"
                   style={{
                     borderRadius: "10px",
@@ -465,20 +518,22 @@ function VideoPlayerComponent() {
               )}
             </div>
             <div
-              className="row mt-2 m-1 container d-md-flex "
+              className="row mt-1 m-1 container d-md-flex "
               style={{
                 backgroundColor: "white",
                 borderRadius: "10px",
-                height: "13vh",
-                width: "90%",
+                height: "15%",
+                width: "91%",
+                overflow: "auto",
               }}
             >
               {images.length == 0 || loading ? (
-                <div></div>
+                <></>
               ) : (
                 <>
                   {images.map((image) => (
                     <Card
+                      key={image["filename"]}
                       style={{
                         width: "6.8rem",
                         backgroundColor: chosenfaces.includes(image["filename"])
@@ -525,6 +580,7 @@ function VideoPlayerComponent() {
                 <>
                   {blind_options.map((blind_option) => (
                     <Card
+                      key={blind_option.blind_code}
                       style={{
                         backgroundColor:
                           activeBlindOption === blind_option.blind_code
@@ -542,7 +598,57 @@ function VideoPlayerComponent() {
                   ))}
                 </>
               ) : (
-                <div></div>
+                <></>
+              )}
+              {avl ? (
+                <>
+                  <div
+                    className="col col-6 m-0 p-3"
+                    style={{
+                      color: "black",
+                      borderRadius: "10px",
+                      border: "1px solid black",
+                    }}
+                  >
+                    <b>Translated Text</b>
+                    <p>{avldata["translated_text"]}</p>
+                  </div>
+                  <div
+                    className="col ml-1 p-2"
+                    style={{
+                      color: "black",
+                      borderRadius: "10px",
+                      border: "1px solid black",
+                    }}
+                  >
+                    <b>Speech Synthesis</b>
+                    <div
+                      className="w-100 container d-md-flex"
+                      style={{ alignContent: "left", justifyContent: "left" }}
+                    >
+                      <button
+                        className="ml-2 w-50"
+                        id={styles["speechplay"]}
+                        onClick={() => {
+                          onClickPlay(avldata["translated_text"]);
+                        }}
+                      >
+                        Play
+                      </button>
+                      <button
+                        className="ml-2 w-50"
+                        id={styles["speechpause"]}
+                        onClick={() => {
+                          onClickPause();
+                        }}
+                      >
+                        Pause
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
               )}
             </div>
           </div>

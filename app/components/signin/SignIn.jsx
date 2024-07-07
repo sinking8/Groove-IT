@@ -17,18 +17,20 @@ function SignIn() {
           marginLeft: "2%",
         }}
       >
-        <TypeAnimation
+        <a
           className="tomorrow-regular"
           cursor={true}
-          sequence={["Welcome to Groovy!", 3000, ""]}
           style={{
             color: "#fff",
             fontSize: "5.5rem",
             width: "1000px",
             display: "block",
+            textDecoration: "none",
           }}
           repeat={Infinity}
-        />
+        >
+          Welcome to Groovy!
+        </a>
       </div>
       <a id={styles.a} href="/dashboard">
         <span></span>

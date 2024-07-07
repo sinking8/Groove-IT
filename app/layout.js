@@ -33,6 +33,7 @@ export default function RootLayout({ children }) {
         <script
           src="https://upload-widget.cloudinary.com/global/all.js"
           type="text/javascript"
+          async
         ></script>
 
         <script
