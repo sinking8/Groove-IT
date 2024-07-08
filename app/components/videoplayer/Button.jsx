@@ -29,7 +29,6 @@ export default class Button extends Component {
         onClick={(event) => onClickHandler(event.target)}
         disabled={disabled}
       >
-        {icon && <Icon icon={icon} />}
         {label}
       </button>
     );

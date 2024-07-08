@@ -10,9 +10,8 @@
   --color-disabled-text-dark: #4a4a4a;
 
   --color-white: #fff;
-  font-size: 16px;
-  padding: 10px 60px;
   border-radius: 2px;
+  width: 100%;
   margin: 10px 0px;
   cursor: pointer;
   transition: background-color 0.1s linear, color 0.1s linear,
@@ -21,12 +20,22 @@
 
 /* Main Button Styles */
 
+.button--primary,
+.button--secondary {
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+
 .button--primary {
-  border: 2px solid transparent;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
 }
 
 .button--secondary {
   background: none;
+  border-top: 2px solid var(--color-secondary-light); /* Adjust the color as needed */
+  border-bottom: 2px solid var(--color-secondary-light); /* Adjust the color as needed */
 }
 
 .button--tertiary {
@@ -64,7 +73,7 @@
 }
 
 .button.button--primary.button--icon {
-  padding: 10px 45px;
+  padding: 10px 40px;
 }
 
 .button__icon {
@@ -199,6 +208,14 @@
 
 /* Button Size Styles */
 
+.button--small,
+.button--medium,
+.button--large {
+  display: flex; /* Use Flexbox */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: center; /* Center the content horizontally */
+}
+
 .button--small {
   padding: 8px 30px;
   font-size: 0.8rem;
@@ -206,11 +223,30 @@
 
 .button--medium {
   margin-top: -10px;
-  padding: 3px 20px;
-  font-size: 1.1rem;
+  padding: 1px 30px;
+  font-size: 1.5rem;
 }
 
 .button--large {
   padding: 10px 80px;
   font-size: 1.2rem;
+}
+
+/* Assuming the icon is placed before the text */
+.button i,
+.button .button-icon {
+  margin-right: 8px; /* Increase the gap by adding right margin to the icon */
+}
+
+/* OR, if the icon is placed after the text */
+.button i,
+.button .button-icon {
+  margin-left: 8px; /* Increase the gap by adding left margin to the icon */
+}
+
+/* Assuming the image is placed before the text */
+.button img {
+  margin-right: 70px; /* Increase the gap for images before the text */
+  /* OR */
+  margin-left: 20px; /* Increase the gap for images after the text */
 }

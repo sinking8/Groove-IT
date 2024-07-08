@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
-import { Carousel, CarouselItem, Card } from "react-bootstrap";
+import {
+  Carousel,
+  CarouselItem,
+  Card,
+  CardImg,
+  CardBody,
+} from "react-bootstrap";
 import CloudinaryWidgetButton from "./videoplayeruploadwidget";
 import SampleVideo from "../sample_video/SampleVideo";
 import { useState } from "react";
@@ -13,6 +19,9 @@ import Toast from "react-bootstrap/Toast";
 import axios from "axios";
 
 import styles from "./videoplayer.module.css";
+import Image from "next/image";
+
+import window from "global";
 
 const sample_videos = [
   { video_name: "Dance", public_id: "samples/dance-2", cloud_name: "demo" },
@@ -27,13 +36,25 @@ const transformations = [
   { name: "REVERSE", transformation_string: "e_reverse" },
   { name: "VIGNETTE", transformation_string: "e_vignette" },
   { name: "VIS NOISE", transformation_string: "e_noise:100" },
-  { name: "BLUR EFF", transformation_string: "e_blur:300" },
+  { name: "BLUR EFF", transformation_string: "e_blur:800" },
 ];
 
 const blind_options = [
-  { name: "Deuteranopia", blind_code: "d" },
-  { name: "Protanopia", blind_code: "p" },
-  { name: "Tritanopia", blind_code: "t" },
+  {
+    name: "Deuteranopia",
+    blind_code: "d",
+    blind_img: "/color_blind_images/deut.png",
+  },
+  {
+    name: "Protanopia",
+    blind_code: "p",
+    blind_img: "/color_blind_images/prot.png",
+  },
+  {
+    name: "Tritanopia",
+    blind_code: "t",
+    blind_img: "/color_blind_images/tritan.png",
+  },
 ];
 
 flag = false;
@@ -86,8 +107,8 @@ function contruct_transformation_string(chosentransformations) {
   if (chosentransformations == undefined || chosentransformations.length == 0) {
     return transformation_string;
   }
-  for (let i = 0; i < transformations.length; i++) {
-    transformation_string += transformations[i];
+  for (let i = 0; i < chosentransformations.length; i++) {
+    transformation_string += chosentransformations[i];
     if (i != transformations.length - 1) {
       transformation_string += "/";
     }
@@ -95,8 +116,17 @@ function contruct_transformation_string(chosentransformations) {
   return transformation_string;
 }
 
-function construct_cloudinary_url(public_id, cloud_name, transformations) {
-  const transformation = contruct_transformation_string(transformations);
+function generate_caption_url(public_id, cloud_name) {
+  return (
+    "https://player.cloudinary.com/embed/?public_id=" +
+    public_id +
+    "&cloud_name=" +
+    cloud_name
+  );
+}
+
+function construct_cloudinary_url(public_id, cloud_name, curr_transformations) {
+  const transformation = contruct_transformation_string(curr_transformations);
   if (transformation == "") {
     return (
       "https://res.cloudinary.com/" +
@@ -127,6 +157,7 @@ function VideoPlayerComponent() {
   const [images, setImages] = useState([]);
   const [blindoption, setBlindOption] = useState(false);
   const [avl, setAVL] = useState(false);
+  const [iscaptionvideo, setIsCaptionVideo] = useState(false);
 
   const [avldata, setAVLData] = useState({});
   const [chosenfaces, setChosenFaces] = useState([]);
@@ -155,6 +186,8 @@ function VideoPlayerComponent() {
     setAVL(false);
     setBlindOption(false);
     setLoading(true);
+    setActivated(false);
+    setIsCaptionVideo(false);
 
     let faces = "";
     if (chosenfaces.length == images.length) {
@@ -193,6 +226,7 @@ function VideoPlayerComponent() {
     setImages([]);
     setAVL(false);
     setBlindOption(false);
+    setIsCaptionVideo(false);
     axios
       .post(
         server_url + "/get_faces_cloudinary?cloudinary_url=" + cloudinary_url
@@ -211,6 +245,7 @@ function VideoPlayerComponent() {
     );
     setLoading(true);
     setImages([]);
+    setIsCaptionVideo(false);
     axios
       .post(
         server_url +
@@ -237,6 +272,7 @@ function VideoPlayerComponent() {
     setLoading(true);
     setAVL(false);
     setBlindOption(false);
+    setIsCaptionVideo(true);
     setImages([]);
     axios
       .post(
@@ -262,6 +298,7 @@ function VideoPlayerComponent() {
     );
     setAVL(false);
     setLoading(true);
+    setIsCaptionVideo(false);
     setImages([]);
     axios
       .post(
@@ -284,6 +321,7 @@ function VideoPlayerComponent() {
     );
     setLoading(true);
     setImages([]);
+    setIsCaptionVideo(false);
     axios
       .post(
         server_url + "/avl_support_cloudinary?cloudinary_url=" + cloudinary_url
@@ -325,15 +363,22 @@ function VideoPlayerComponent() {
             </div>
             <div className="row m-2 p-0">
               <CloudinaryWidgetButton uwConfig={uwConfig} setVideo={setVideo} />
-              <Card className="mt-2 p-0 mb-2">
+              <Card
+                className="mt-2 p-0 mb-2"
+                style={{
+                  borderColor: "#29b5a8",
+                  borderWidth: "2.1px",
+                  borderRadius: "10px",
+                }}
+              >
                 <div
-                  className="ml-2"
-                  style={{ textAlign: "center", fontSize: "20px" }}
+                  className="ml-2 mt-2"
+                  style={{ textAlign: "center", fontSize: "28px" }}
                 >
-                  <b>Gen AI Tools</b>
+                  Gen AI Tools
                 </div>
                 <div className="card-body mt-1 p-0">
-                  <div className="row m-2">
+                  <div className="row  m-0 p-0 mt-2">
                     <Button
                       size={ButtonSizes.MEDIUM}
                       label="Anonymize"
@@ -350,7 +395,7 @@ function VideoPlayerComponent() {
                       disabled={!activated}
                     />
                   </div>
-                  <div className="row m-2 mt-0 p-0">
+                  <div className="row m-0 p-0">
                     <Button
                       size={ButtonSizes.MEDIUM}
                       label="Colorize"
@@ -367,7 +412,7 @@ function VideoPlayerComponent() {
                       }
                     />
                   </div>
-                  <div className="row m-2">
+                  <div className="row m-0 p-0">
                     <Button
                       size={ButtonSizes.MEDIUM}
                       label="Captionize"
@@ -384,7 +429,7 @@ function VideoPlayerComponent() {
                       }
                     />
                   </div>
-                  <div className="row m-2">
+                  <div className="row p-0 m-0">
                     <Button
                       size={ButtonSizes.MEDIUM}
                       label="Tunify"
@@ -402,9 +447,10 @@ function VideoPlayerComponent() {
                     />
                   </div>
 
-                  <div className="row m-2">
+                  <div className="row m-0 p-0">
                     <Button
                       size={ButtonSizes.MEDIUM}
+                      icon="save"
                       label="AVL Support"
                       onClickHandler={() => {
                         setActivated(false);
@@ -417,7 +463,7 @@ function VideoPlayerComponent() {
                           ? ButtonTypes.PRIMARY
                           : ButtonTypes.SECONDARY
                       }
-                    />
+                    ></Button>
                   </div>
                 </div>
               </Card>
@@ -502,18 +548,21 @@ function VideoPlayerComponent() {
                 </div>
               ) : (
                 <iframe
-                  src={construct_cloudinary_url(
-                    video.public_id,
-                    video.cloud_name,
-                    chosentransformations
-                  )}
+                  src={
+                    iscaptionvideo
+                      ? generate_caption_url(video.public_id, video.cloud_name)
+                      : construct_cloudinary_url(
+                          video.public_id,
+                          video.cloud_name,
+                          chosentransformations
+                        )
+                  }
                   width="950"
                   height="580"
                   allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                   className="ml-1"
                   allowfullscreen
                   frameborder="0"
-                  style={{ width: "92%" }}
                 ></iframe>
               )}
             </div>
@@ -522,8 +571,10 @@ function VideoPlayerComponent() {
               style={{
                 backgroundColor: "white",
                 borderRadius: "10px",
-                height: "15%",
-                width: "91%",
+                borderColor: "#29b5a8",
+                borderWidth: "3.1px",
+                height: "26%",
+                width: "99%",
                 overflow: "auto",
               }}
             >
@@ -578,6 +629,33 @@ function VideoPlayerComponent() {
               )}
               {blindoption ? (
                 <>
+                  <Card className="m-3 col-4">
+                    <Card.Title style={{ textAlign: "center" }}>
+                      Actual Image
+                    </Card.Title>
+                    <div className="container d-md-flex p-1 m-0">
+                      <img
+                        src="/color_blind_images/actual.png"
+                        className="col-6"
+                        width={70}
+                        style={{ borderRadius: "10px" }}
+                      ></img>
+                      <div
+                        className="container col-10 m-1 p-0"
+                        style={{
+                          fontSize: "13px",
+                          overflow: "auto",
+                          textAlign: "left",
+                        }}
+                      >
+                        <p>
+                          <b>Choose an Option</b> <br></br>with an image similar
+                          to <br></br>this one for optimal <br></br>colorblind
+                          support toning.
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
                   {blind_options.map((blind_option) => (
                     <Card
                       key={blind_option.blind_code}
@@ -587,13 +665,16 @@ function VideoPlayerComponent() {
                             ? "#00f2ea"
                             : "white",
                       }}
-                      className="m-2 col p-2"
+                      className="col-2 m-3"
                       onClick={(e) => {
                         setActiveBlindOption(blind_option.blind_code);
                         daltonize(blind_option.blind_code);
                       }}
                     >
-                      {blind_option.name}
+                      <Card.Title style={{ textAlign: "center" }}>
+                        {blind_option.name}
+                      </Card.Title>
+                      <Card.Img src={blind_option.blind_img} />
                     </Card>
                   ))}
                 </>
