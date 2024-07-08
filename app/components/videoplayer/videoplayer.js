@@ -244,6 +244,7 @@ function VideoPlayerComponent() {
       video.cloud_name
     );
     setLoading(true);
+    setBlindOption(false);
     setImages([]);
     setIsCaptionVideo(false);
     axios
@@ -298,6 +299,7 @@ function VideoPlayerComponent() {
     );
     setAVL(false);
     setLoading(true);
+    setBlindOption(false);
     setIsCaptionVideo(false);
     setImages([]);
     axios
@@ -321,6 +323,7 @@ function VideoPlayerComponent() {
     );
     setLoading(true);
     setImages([]);
+    setBlindOption(false);
     setIsCaptionVideo(false);
     axios
       .post(
