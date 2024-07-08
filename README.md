@@ -14,6 +14,9 @@ Regardless of any disabilities, we want to create a world where everyone feels e
 
 ## How we built it
 
+1. Backend : The backend is developed using FastAPI and LangChain [check out the backend-API Branch]
+2. Frontend : The Frontend for the application is developed using React JS [check out the frontend Branch]
+
 ## Challenges we ran into
 Developing Groove-IT wasn't without its challenges. Our primary obstacle was using free versions of cloud services and APIs, which frequently resulted in excruciatingly long wait times. This made it challenging to continue providing our users with the seamless, effective experience we had in mind. Furthermore, managing video transfer and processing effectively presented a great deal of technical difficulty. Since every video is different, it was difficult to manage the data while maintaining accessibility and excellent quality.
 
