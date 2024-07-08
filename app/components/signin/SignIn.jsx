@@ -29,7 +29,7 @@ function SignIn() {
           }}
           repeat={Infinity}
         >
-          Welcome to Groovy!
+          Welcome to Groove-IT!
         </a>
       </div>
       <a id={styles.a} href="/dashboard">
