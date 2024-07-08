@@ -1,7 +1,8 @@
 .main_container {
-  height: 100vh;
+  height: 110vh;
   width: 100%;
-  background-color: black;
+  background-color: rgba(214, 213, 213, 0.74);
+  overflow-x: hidden;
 }
 
 .loaderContainer {
