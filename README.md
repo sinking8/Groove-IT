@@ -1,5 +1,5 @@
 ## Inspiration
-At Groove-IT, we believe that creativity should be boundless, transcending any physical limitations. Our mission is simple yet profound: to ensure that disabilities do not stand in the way of anyone's dream to create videos. We are inspired by the idea that everyone, regardless of their abilities, should have the tools and support they need to express themselves fully.
+We believe that creativity should be boundless, transcending any physical limitations. Our mission is simple yet profound: to ensure that disabilities do not stand in the way of anyone's dream to create videos. We are inspired by the idea that everyone, regardless of their abilities, should have the tools and support they need to express themselves fully.
 
 ## What it does
 Consider a young artist who is visually impaired but has excellent vision. They can customize video tones to their taste using Groove-IT's Colorize feature, allowing their imagination to come to life without sacrificing subtle visual details. 
