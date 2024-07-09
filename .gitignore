@@ -7,6 +7,7 @@
 
 #Cache Files
 __pycache__
+/app/cache/*
 /cache
 /config.toml
 
