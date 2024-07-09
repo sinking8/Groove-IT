@@ -2,7 +2,7 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: "dmr4n68im",
-    NEXT_SERVER_URL: "http://127.0.0.1:8000",
+    NEXT_SERVER_URL: "https://grooveit-tfqmrdnb5q-uc.a.run.app/docs",
   },
 };
 
