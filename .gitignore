@@ -4,10 +4,12 @@
 
 # Env
 .env
+.toml
 
 #Cache Files
 __pycache__
-/app/cache/*
+./app/cache/*
+/app/config.toml
 /cache
 /config.toml
 
