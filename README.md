@@ -1,5 +1,5 @@
 # Groove - IT
-<img src="https://github.com/sinking8/Groove-IT/blob/main/public/video_gif.gif" width="400" height="380" style="display: block; margin: auto;"></img>
+<img src="https://github.com/sinking8/Groove-IT/blob/main/public/video_gif.gif" width="600" height="380" style="display: block; margin: auto;"></img>
 <img src="https://github.com/sinking8/Groove-IT/blob/main/public/colorblind.jpg" width="600" height="300" style="display: block; margin: auto;"></img>
 
 ## Inspiration
