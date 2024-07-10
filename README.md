@@ -6,11 +6,17 @@ Consider a young artist who is visually impaired but has excellent vision. They 
 
 Imagine also that an aspiring deaf filmmaker could use our AVL Support to add audio descriptions and sign language recognition, making sure their stories have the same impact as anyone else's.
 
+### Anonymize
 Our Anonymize feature enables people who cherish their privacy to express their creativity without disclosing who they are. In the meantime, Tunify frees users from the burden of choosing the ideal background music so they can concentrate on what they do best: create.
 
+### Annotate
 Groove-IT is a community where everyone's voice matters, not just a place to record videos. Annotate's intelligent subtitles ensure that every message is understood clearly and loudly. Physical constraints are meant to be a part of each creator's individual journey, not a hindrance, on our platform.
 
+### AVL Support
 Regardless of any disabilities, we want to create a world where everyone feels empowered to voice their opinions. At Groove-IT, we value the variety of human experiences and make sure that everyone has the chance to add to the colorful tapestry of expression and creativity
+
+## Tunify
+A groovy feature!!, The sentiments in a video is analyzed and based on the context, an awesome background score is attached to it.
 
 ## How we built it
 
