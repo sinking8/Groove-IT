@@ -2,7 +2,6 @@
   height: 110vh;
   width: 100%;
   background-color: rgba(214, 213, 213, 0.74);
-  overflow-x: hidden;
 }
 
 .loaderContainer {
