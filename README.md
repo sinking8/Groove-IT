@@ -27,6 +27,9 @@ A groovy feature!!, The sentiments in a video is analyzed and based on the conte
 1. Backend : The backend is developed using FastAPI and LangChain [check out the backend-API Branch](https://github.com/sinking8/Groove-IT/tree/backend_API)
 2. Frontend : The Frontend for the application is developed using React JS [check out the frontend Branch](https://github.com/sinking8/Groove-IT/tree/frontend)
 
+## Workflow
+![workflow][https://github.com/sinking8/Groove-IT/blob/main/public/Groove-IT.png]
+
 ## Challenges we ran into
 Developing Groove-IT wasn't without its challenges. Our primary obstacle was using free versions of cloud services and APIs, which frequently resulted in excruciatingly long wait times. This made it challenging to continue providing our users with the seamless, effective experience we had in mind. Furthermore, managing video transfer and processing effectively presented a great deal of technical difficulty. Since every video is different, it was difficult to manage the data while maintaining accessibility and excellent quality.
 
