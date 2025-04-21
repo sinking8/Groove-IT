@@ -14,7 +14,7 @@ Imagine also that an aspiring deaf filmmaker could use our AVL Support to add au
 Our Anonymize feature enables people who cherish their privacy to express their creativity without disclosing who they are. In the meantime, Tunify frees users from the burden of choosing the ideal background music so they can concentrate on what they do best: create.
 
 ### Annotate
-Groove-IT is a community where everyone's voice matters, not just a place to record videos. Annotate's intelligent subtitles ensure that every message is understood clearly and loudly. Physical constraints are meant to be a part of each creator's individual journey, not a hindrance, on our platform.
+Groove-IT is a community where everyone's voice matters, not just a place to record videos. Annotate's intelligent subtitles ensure that every message is understood clearly and loudly. Physical constraints are meant to be a part of each creator's individual journey, not a hindrance, on my platform.
 
 ### AVL Support
 Regardless of any disabilities, we want to create a world where everyone feels empowered to voice their opinions. At Groove-IT, we value the variety of human experiences and make sure that everyone has the chance to add to the colorful tapestry of expression and creativity
@@ -22,7 +22,7 @@ Regardless of any disabilities, we want to create a world where everyone feels e
 ## Tunify
 A groovy feature!!, The sentiments in a video is analyzed and based on the context, an awesome background score is attached to it.
 
-## How we built it
+## How I built it
 
 1. Backend : The backend is developed using FastAPI and LangChain [check out the backend-API Branch](https://github.com/sinking8/Groove-IT/tree/backend_API)
 2. Frontend : The Frontend for the application is developed using React JS [check out the frontend Branch](https://github.com/sinking8/Groove-IT/tree/frontend)
@@ -30,14 +30,14 @@ A groovy feature!!, The sentiments in a video is analyzed and based on the conte
 ## Workflow
 ![workflow](https://github.com/sinking8/Groove-IT/blob/main/public/Groove-IT.png)
 
-## Challenges we ran into
-Developing Groove-IT wasn't without its challenges. Our primary obstacle was using free versions of cloud services and APIs, which frequently resulted in excruciatingly long wait times. This made it challenging to continue providing our users with the seamless, effective experience we had in mind. Furthermore, managing video transfer and processing effectively presented a great deal of technical difficulty. Since every video is different, it was difficult to manage the data while maintaining accessibility and excellent quality.
+## Challenges I ran into
+Developing Groove-IT wasn't without its challenges. My primary obstacle was using free versions of cloud services and APIs, which frequently resulted in excruciatingly long wait times. This made it challenging to continue providing our users with the seamless, effective experience we had in mind. Furthermore, managing video transfer and processing effectively presented a great deal of technical difficulty. Since every video is different, it was difficult to manage the data while maintaining accessibility and excellent quality.
 
-## Accomplishments that we're proud of
-In spite of these difficulties, we've accomplished something amazing. We have developed an inclusive platform that allows anyone, particularly those with disabilities, to create videos. Not only are features like Colorize and AVL Support examples of technological advances, but they also demonstrate our dedication to accessibility and inclusivity. These features guarantee that everyone can use video to share their stories and creativity, irrespective of their physical limitations.
+## Accomplishments that I am proud of
+In spite of these difficulties, I have accomplished something amazing. I developed an inclusive platform that allows anyone, particularly those with disabilities, to create videos. Not only are features like Colorize and AVL Support examples of technological advances, but they also demonstrate our dedication to accessibility and inclusivity. These features guarantee that everyone can use video to share their stories and creativity, irrespective of their physical limitations.
 
-## What we learned
-We learned a great deal about the value of accessibility in technology from our development process. We came to understand that inclusive design is essential and not just a nice-to-have. It guarantees universal access to the digital world. Creating Groove-IT taught us how to use Gen-AI to meet the needs of a wide range of users, transforming technology into a potent instrument for expression and inclusivity.
+## What I learned
+I learned a great deal about the value of accessibility in technology from our development process. I came to understand that inclusive design is essential and not just a nice-to-have. It guarantees universal access to the digital world. Creating Groove-IT taught me how to use Gen-AI to meet the needs of a wide range of users, transforming technology into a potent instrument for expression and inclusivity.
 
 ## What's next for Groove-IT
-We are enthusiastic about what lies ahead for Groove-IT. Our objective is to keep enhancing the user experience and adding new features to our offering. We're determined to maintain Groove-IT at the forefront of innovation and accessibility for making videos. In order to ensure that our platform adapts to the needs of all video creators, this entails improving our Gen-AI capabilities and investigating new avenues for support.
+I am enthusiastic about what lies ahead for Groove-IT. My objective is to keep enhancing the user experience and adding new features to the offering. I am determined to maintain Groove-IT at the forefront of innovation and accessibility for making videos. In order to ensure that my platform adapts to the needs of all video creators, this entails improving the  Gen-AI capabilities and investigating new avenues for support.
